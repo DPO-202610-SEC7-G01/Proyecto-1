@@ -1,6 +1,4 @@
-# Proyecto 1 
-
-## Board Game Cafe Management System
+# Proyecto 1 : Board Game Cafe Management System
 
 Este repositorio contiene el desarrollo del Proyecto 1 del curso, correspondiente a un sistema de gestión para un Board Game Cafe. La primera entrega se centra en el análisis del sistema y la construcción del modelo de dominio.
 
@@ -23,6 +21,7 @@ Proyecto 1/
 │   └── 📂 recursos/                   # Otros activos del análisis
 │
 └── 📘 README.md                       # Guía principal del proyecto
+```
 ---
 
 ##  Estado Actual
