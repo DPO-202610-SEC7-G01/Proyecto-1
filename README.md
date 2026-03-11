@@ -6,21 +6,23 @@ Este repositorio contiene el desarrollo del Proyecto 1 del curso, correspondient
 
 ---
 
-## Estructura del Proyecto
+##  Estructura del Proyecto
 
+El repositorio está organizado por entregas, cada una conteniendo la documentación técnica y los diagramas correspondientes:
+
+```text
 Proyecto 1/
+├── 📁 Entrega 1/
+│   ├── 🖼️ Modelo de Dominio.png       # Diagrama de clases (Modelo de dominio)
+│   └── 📄 Documento de Analisis.pdf   # Requerimientos funcionales y restricciones
 │
-├── Entrega 1/
-│ ├── Modelo de Dominio.png # Imagen del diagrama de clases (modelo de dominio)
-│ ├── Documento de Analisis.pdf # Documento de análisis con RF, restricciones, etc.
+├── 📁 Entrega 2/
+│   ├── 🖼️ Modelo de Dominio.png       # Diagrama de clases actualizado
+│   ├── 📄 Documento de Analisis.pdf   # Documento técnico completo
+│   ├── ⚙️ Modelo de Dominio.uml       # Archivo fuente del diagrama (PlantUML/StarUML)
+│   └── 📂 recursos/                   # Otros activos del análisis
 │
-├── Entrega 2/
-│ ├── Modelo de Dominio.png # Imagen del diagrama de clases (modelo de dominio)
-│ ├── Documento de Analisis.pdf # Documento de análisis con RF, restricciones, etc.
-│ ├── Modelo de Dominio.uml # Archivo fuente del diagrama (si aplica)
-│ └── (otros recursos del análisis)
-│
-└── README.md # Este archivo
+└── 📘 README.md                       # Guía principal del proyecto
 ---
 
 ##  Estado Actual
