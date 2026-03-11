@@ -11,17 +11,13 @@ El repositorio está organizado por entregas, cada una conteniendo la documentac
 ```text
 Proyecto 1/
 ├── 📁 Entrega 1/
-│   ├── 🖼️ Modelo de Dominio.png       # Diagrama de clases (Modelo de dominio)
+│   ├── 🖼️ Modelo de Dominio.pdf       # Diagrama de clases (Modelo de dominio)
 │   └── 📄 Documento de Analisis.pdf   # Requerimientos funcionales y restricciones
 │
 ├── 📁 Entrega 2/
-│   ├── 🖼️ Modelo de Dominio.png       # Diagrama de clases actualizado
-│   ├── 📄 Documento de Analisis.pdf   # Documento técnico completo
-│   ├── ⚙️ Modelo de Dominio.uml       # Archivo fuente del diagrama (PlantUML/StarUML)
-│   └── 📂 recursos/                   # Otros activos del análisis
 │
-└── 📘 README.md                       # Guía principal del proyecto
-```
+├── 📄 Instrucciones Proyecto 1.pdf    # Guía principal del proyecto
+└── 📘 README.md                    
 ---
 
 ##  Estado Actual
@@ -43,7 +39,7 @@ Actualmente, el proyecto se encuentra en la **Entrega 1**, que corresponde al an
 El modelo de dominio incluye entidades como:
 
 - `Usuario` (con herencia: `Administrador`, `Empleado`, `Cliente`)
-- `Juego` (con herencia: `JuegoCartas`, `JuegoTablero`, `JuegoAccion`)
+- `Juego` (con herencia: `JuegoDifícil`)
 - `Mesa`, `Prestamo`, `Venta`, `Platillo`, `Turno`, entre otras.
 
 Las relaciones incluyen asociaciones, herencias, composiciones y agregaciones necesarias para reflejar la lógica del negocio.
