@@ -50,15 +50,13 @@ Las relaciones incluyen asociaciones, herencias, composiciones y agregaciones ne
 
 ---
 
-##  Equipo
+###  Integrantes
 
 - Ángela Valentina Bustos Giraldo
 - [Nombre del estudiante 2]
 - [Nombre del estudiante 3]
 
 ---
-
-## 📚 Curso
 
 Programación Orientada a Objetos  
 Universidad de los Andes  
