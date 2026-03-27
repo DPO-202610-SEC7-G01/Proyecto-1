@@ -4,5 +4,5 @@
 /**
  * 
  */
-module board_game_cafe {
+module game_cafe {
 }
