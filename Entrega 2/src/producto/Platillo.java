@@ -21,7 +21,7 @@ public class Platillo extends Producto{
 
 	@Override
 	public double getTasaImpuesto() {
-	    return 0.19; 
+	    return super.IMPUESTOCONSUMO; 
 	}
 
 	@Override

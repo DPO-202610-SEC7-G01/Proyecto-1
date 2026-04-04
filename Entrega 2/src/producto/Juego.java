@@ -124,7 +124,7 @@ public class Juego extends Producto{
 	//Métodos
 	@Override
 	public double getTasaImpuesto() {
-	    return 0.19; // IVA para juegos
+	    return super.IVA; // IVA para juegos
 	}
 	
 	@Override

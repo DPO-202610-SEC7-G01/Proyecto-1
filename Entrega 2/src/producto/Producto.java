@@ -4,6 +4,8 @@ public  abstract class Producto {
 	private int id;
 	private int precio;
 	private String nombre;
+	public  final double IVA = 0.19;
+    public final double IMPUESTOCONSUMO = 0.08;
 	
 
 	//Constructor

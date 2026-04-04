@@ -39,7 +39,7 @@ public class Bebida extends Producto{
 	// Métodos
 	@Override
 	public double getTasaImpuesto() {
-	    return 0.19; // IVA estándar para alimentos procesados/pastelería
+	    return super.IMPUESTOCONSUMO; // IVA estándar para alimentos procesados/pastelería
 	}
 
 	@Override
