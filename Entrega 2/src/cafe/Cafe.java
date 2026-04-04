@@ -6,11 +6,11 @@ import java.util.Map;
 
 import usuario.empleado;
 import usuario.Usuario;
-import usuario.Mesero;   
+import usuario.Mesero;
 import usuario.Cocinero;
 
 public class Cafe {
-	
+
 	private int capacidad;
 	private ArrayList<Mesa> mesas;
 	private ArrayList<Usuario> usuarios;
@@ -20,9 +20,8 @@ public class Cafe {
 	private Map<Integer, Transaccion> historialTransaccion;
 	private Map<Integer, Reserva> historialReserva;
 	private Map<Calendar, empleado> turnoEmpleados;
-	
-	
-	//Constructor
+
+	// Constructor
 	public Cafe(int capacidad, ArrayList<Mesa> mesas, ArrayList<Usuario> usuarios, ArrayList<empleado> empleados,
 			ArrayList<Reserva> reservasPrevias, ArrayList<RegistroUso> historialUsoJuegos,
 			Map<Integer, Transaccion> historialTransaccion, Map<Integer, Reserva> historialReserva,
@@ -38,8 +37,8 @@ public class Cafe {
 		this.historialReserva = historialReserva;
 		this.turnoEmpleados = turnoEmpleados;
 	}
-	
-	//Getters y Setters
+
+	// Getters y Setters
 
 	public int getCapacidad() {
 		return capacidad;
@@ -112,63 +111,66 @@ public class Cafe {
 	public void setTurnoEmpleados(Map<Calendar, empleado> turnoEmpleados) {
 		this.turnoEmpleados = turnoEmpleados;
 	}
-	
-	
-	//Métodos 
+
+	// Métodos
 	public void registrarNuevaReserva(Reserva r) {
-		if (verificarDisponibilidad(r.getFecha(), r.getNumPersonas()) ) {
-		reservasPrevias.add(r);
+		if (verificarDisponibilidad(r.getFecha(), r.getNumPersonas())) {
+			reservasPrevias.add(r);
 		}
 	}
-	
+
 	public boolean verificarDisponibilidad(Calendar fecha, int numPersonas) {
-		if (numPersonas <= capacidad || numPersonas>0) {
+		if (numPersonas <= capacidad || numPersonas > 0) {
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean aptoApertura(Calendar fechaConsulta) {
-	    int cocineros = 0;
-	    int meseros = 0;
 
-	    for (Map.Entry<Calendar, empleado> entrada : turnoEmpleados.entrySet()) {
-	        Calendar fechaTurno = entrada.getKey();
-	        empleado e = entrada.getValue();
-	        if (esMismaFecha(fechaTurno, fechaConsulta)) {
-	            if (e instanceof Mesero) {
-	                meseros++;
-	            } else if (e instanceof Cocinero) {
-	                cocineros++;
-	            }
-	        }
-	    }
-	    return (cocineros >= 1 && meseros >= 2);
+	public boolean aptoApertura(Calendar fechaConsulta) {
+		int cocineros = 0;
+		int meseros = 0;
+
+		for (Map.Entry<Calendar, empleado> entrada : turnoEmpleados.entrySet()) {
+			Calendar fechaTurno = entrada.getKey();
+			empleado e = entrada.getValue();
+			if (esMismaFecha(fechaTurno, fechaConsulta)) {
+				if (e instanceof Mesero) {
+					meseros++;
+				} else if (e instanceof Cocinero) {
+					cocineros++;
+				}
+			}
+		}
+		return (cocineros >= 1 && meseros >= 2);
 	}
 
 	private boolean esMismaFecha(Calendar cal1, Calendar cal2) {
-	    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-	           cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+		return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+				&& cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
 	}
-	
+
 	public void asignarMesa(Reserva r) {
-		for (Mesa mesita: mesas) {
-			if (mesita.isDisponible() && r.getNumPersonas()<=mesita.getNumSillas()) {
+		for (Mesa mesita : mesas) {
+			if (mesita.isDisponible() && r.getNumPersonas() <= mesita.getNumSillas()) {
 				mesita.setDisponible(false);
 			}
 		}
 	}
-	
+
 	public void agregarEmpleado(empleado e) {
-		empleados.add(e);
+		this.empleados.add(e);
 	}
-	
+
 	public double calcularIngresosTotales(Calendar fechaInicio, Calendar fechaFin) {
-		for (Map.Entry<Integer, empleado> entrada : historialTransaccion.entrySet()) {
-	        Calendar fechaTurno = entrada.getKey();
-	        empleado e = entrada.getValue();
-	        if (esMismaFecha(fechaTurno, fechaInicio) ) {
-		return 0.0;
+		double total = 0;
+		for (Map.Entry<Integer, Transaccion> entrada : historialTransaccion.entrySet()) {
+	        Transaccion transaccion = entrada.getValue();
+	        Calendar fecha = transaccion.getFecha();
+	        if((fecha.equals(fechaInicio)|| fecha.after(fechaInicio)) && (fecha.equals(fechaFin) || fecha.before(fechaFin))) {
+	        	total += transaccion.calcularTotal();
+	        }
+		}
+		return total;
 	}
 	
 }
