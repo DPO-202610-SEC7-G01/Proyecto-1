@@ -1,5 +1,5 @@
 package producto;
 
-public class JuegoDificil {
+public class JuegoDificil extends Juego{
 
 }
