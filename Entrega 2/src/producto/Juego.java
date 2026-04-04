@@ -122,6 +122,16 @@ public class Juego extends Producto{
 	
 	
 	//Métodos
+	@Override
+	public double getTasaImpuesto() {
+	    return 0.19; // IVA para juegos
+	}
+	
+	@Override
+	public String getCategoriaProducto() {
+		return "Juego";
+	}
+	
 	public boolean requiereInstructor() {
 		return false;
 	}
@@ -147,6 +157,8 @@ public class Juego extends Producto{
 	public boolean esCategoriaAccion() {
 	    return this.categoria != null && this.categoria.equals("Acción");
 	}
+
+	
 
 	
 	
