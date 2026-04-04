@@ -1,9 +1,11 @@
 package producto;
 
-public  class Producto {
+public  abstract class Producto {
 	private int id;
 	private int precio;
 	private String nombre;
+	
+
 	//Constructor
 	public Producto(int id, int precio,String nombre) {
 		this.id = id;
@@ -31,6 +33,16 @@ public  class Producto {
 		this.nombre = nombre;
 	}
 	
+	//métodos
+	public abstract double getTasaImpuesto();
 	
+	public double calcularPrecioFinal() {
+        return this.precio * (1 + getTasaImpuesto());
+    }
+	public String getInfoVenta() {
+        return String.format("%s (ID: %d) - Precio Base: $%d", nombre, id, precio);
+    }
+	
+	public abstract String getCategoriaProducto();
 	
 }
