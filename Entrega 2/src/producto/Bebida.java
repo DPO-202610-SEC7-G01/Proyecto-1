@@ -19,6 +19,7 @@ public class Bebida extends Producto{
 		this.tieneAlcohol = false;
 	}
 
+	//Getters y Setters
 	public boolean isTieneAlcohol() {
 		return tieneAlcohol;
 	}
@@ -33,6 +34,17 @@ public class Bebida extends Producto{
 
 	public void setTemperatura(String temperatura) {
 		this.temperatura = temperatura;
+	}
+	
+	// Métodos
+	@Override
+	public double getTasaImpuesto() {
+	    return 0.19; // IVA estándar para alimentos procesados/pastelería
+	}
+
+	@Override
+	public String getCategoriaProducto() {
+		return "Bebida";
 	}
 	
 	
