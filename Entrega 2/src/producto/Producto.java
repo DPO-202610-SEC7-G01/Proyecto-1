@@ -39,9 +39,7 @@ public  abstract class Producto {
 	public double calcularPrecioFinal() {
         return this.precio * (1 + getTasaImpuesto());
     }
-	public String getInfoVenta() {
-        return String.format("%s (ID: %d) - Precio Base: $%d", nombre, id, precio);
-    }
+
 	
 	public abstract String getCategoriaProducto();
 	

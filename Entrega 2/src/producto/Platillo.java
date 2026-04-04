@@ -18,7 +18,19 @@ public class Platillo extends Producto{
 	public void setAlergeneos(String alergeneos) {
 		this.alergeneos = alergeneos;
 	}
+
+	@Override
+	public double getTasaImpuesto() {
+	    return 0.19; 
+	}
+
+	@Override
+	public String getCategoriaProducto() {
+		return "Platillo";
+	}
 	
+	
+	//Métodos
 	
 	
 }
