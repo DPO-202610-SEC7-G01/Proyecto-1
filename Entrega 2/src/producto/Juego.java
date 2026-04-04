@@ -13,7 +13,7 @@ public class Juego extends Producto{
 	
 	//Constructor
 	public Juego(int id, int precio, String nombre, int anioPublicacion, String empresMatriz, int numJugadores,
-	        String restriccionEdad, String categoria, String estado, boolean prestado) {
+	        String restriccionEdad, String categoria) {
 	    super(id, precio, nombre);
 	    this.anioPublicacion = anioPublicacion;
 	    this.empresMatriz = empresMatriz;
@@ -39,16 +39,10 @@ public class Juego extends Producto{
 	        this.categoria = "Tablero"; 
 	    }
 
-	    this.estado = estado;
-	    this.prestado = prestado;
+	    this.estado = "nuevo";
+	    this.prestado = false;
 	}
 	
-	public Juego(int id, int precio, String nombre, int anioPublicacion, String empresMatriz, int numJugadores,
-	        String restriccionEdad, String categoria) {
-	    // Llama al constructor de arriba pasando "Nuevo" y false por defecto
-	    this(id, precio, nombre, anioPublicacion, empresMatriz, numJugadores, 
-	         restriccionEdad, categoria, "Nuevo", false);
-	}
 	
 	//Getters y Setters
 
@@ -151,7 +145,7 @@ public class Juego extends Producto{
 	}
 	
 	public boolean estaDisponible() {
-		return !(this.prestado);
+		return this.prestado;
 	}
 	
 	public boolean esCategoriaAccion() {

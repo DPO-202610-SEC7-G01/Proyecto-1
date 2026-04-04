@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import producto.Juego;
 import usuario.empleado;
 import usuario.Usuario;
 import usuario.Mesero;
@@ -18,7 +19,8 @@ public class Cafe {
 	private ArrayList<Cliente> clientes;
 	private ArrayList<empleado> empleados;
 	private ArrayList<Reserva> reservasPrevias;
-	private ArrayList<RegistroUso> historialUsoJuegos;
+	private ArrayList <Juego> juegos;
+	private HashMap<Calendar, HashMap<Juego, Reserva>> historialUsoJuegos;
 	private ArrayList<Transaccion> historialTransaccion;
 	
 	private Map<Calendar, empleado> turnoEmpleados;
@@ -31,7 +33,8 @@ public class Cafe {
 		this.clientes = new ArrayList<Cliente>();
 		this.empleados = new ArrayList<empleado>();
 		this.reservasPrevias = new ArrayList<Reserva>();
-		this.historialUsoJuegos = new ArrayList<RegistroUso>();
+		this.historialUsoJuegos = new HashMap<Calendar, HashMap<Juego,Reserva>>();
+		this.juegos = new ArrayList<Juego>();
 		this.historialTransaccion = new ArrayList<Transaccion>();
 		this.turnoEmpleados = new HashMap<Calendar, empleado>();
 		
@@ -66,7 +69,7 @@ public class Cafe {
 		return reservasPrevias;
 	}
 
-	public ArrayList<RegistroUso> getHistorialUsoJuegos() {
+	public HashMap<Calendar, HashMap<Juego,Reserva>> getHistorialUsoJuegos() {
 		return historialUsoJuegos;
 	}
 
@@ -77,6 +80,10 @@ public class Cafe {
 
 	public Map<Calendar, empleado> getTurnoEmpleados() {
 		return turnoEmpleados;
+	}
+	
+	public ArrayList<Juego> getJuegos(){
+		return this.juegos;
 	}
 
 	// Métodos
@@ -142,7 +149,27 @@ public class Cafe {
 	public void agregarUsuario(Cliente cliente) {
 		this.clientes.add(cliente);
 	}
-
+	public void agregarJuego(Juego juego) {
+		this.juegos.add(juego);
+	}
+	public boolean reservarJuego(Juego juego, Reserva r) {
+		if (juegos.contains(juego)) {
+			Calendar fecha = r.getFecha();
+			if(historialUsoJuegos.containsKey(fecha)) {
+				HashMap<Juego, Reserva> juegosReservados = historialUsoJuegos.get(fecha);
+				
+				if (juegosReservados.containsKey(juego)) {
+						return false;		
+				}
+				else {
+					juegosReservados.put(juego, r);
+					return true;
+				}
+			}
+		}
+		return false;
+		
+	}
 	public double calcularIngresosTotales(Calendar fechaInicio, Calendar fechaFin) {
 		double total = 0;
 		for (Transaccion t: historialTransaccion) {
