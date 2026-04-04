@@ -19,12 +19,12 @@ public class Cafe {
 	private ArrayList<Cliente> clientes;
 	private ArrayList<empleado> empleados;
 	private ArrayList<Reserva> reservasPrevias;
-	private ArrayList <Juego> juegosPrestamo;
-	private ArrayList <Juego> juegosVenta;
+	private ArrayList<Juego> juegosPrestamo;
+	private ArrayList<Juego> juegosVenta;
 	private HashMap<Calendar, HashMap<Juego, Reserva>> historialUsoJuegos;
 	private HashMap<Integer, ArrayList<Juego>> juegosCliente;
 	private ArrayList<Transaccion> historialTransaccion;
-	
+
 	private Map<Calendar, empleado> turnoEmpleados;
 
 	// Constructor
@@ -35,13 +35,13 @@ public class Cafe {
 		this.clientes = new ArrayList<Cliente>();
 		this.empleados = new ArrayList<empleado>();
 		this.reservasPrevias = new ArrayList<Reserva>();
-		this.historialUsoJuegos = new HashMap<Calendar, HashMap<Juego,Reserva>>();
-		this.juegosPrestamo  = new ArrayList<Juego>();
+		this.historialUsoJuegos = new HashMap<Calendar, HashMap<Juego, Reserva>>();
+		this.juegosPrestamo = new ArrayList<Juego>();
 		this.juegosVenta = new ArrayList<Juego>();
 		this.juegosCliente = new HashMap<Integer, ArrayList<Juego>>();
 		this.historialTransaccion = new ArrayList<Transaccion>();
 		this.turnoEmpleados = new HashMap<Calendar, empleado>();
-		
+
 	}
 
 	// Getters
@@ -58,25 +58,21 @@ public class Cafe {
 		return mesas;
 	}
 
-
 	public ArrayList<Cliente> getClientes() {
 		return clientes;
 	}
-
 
 	public ArrayList<empleado> getEmpleados() {
 		return empleados;
 	}
 
-	
 	public ArrayList<Reserva> getReservasPrevias() {
 		return reservasPrevias;
 	}
 
-	public HashMap<Calendar, HashMap<Juego,Reserva>> getHistorialUsoJuegos() {
+	public HashMap<Calendar, HashMap<Juego, Reserva>> getHistorialUsoJuegos() {
 		return historialUsoJuegos;
 	}
-
 
 	public ArrayList<Transaccion> getHistorialTransaccion() {
 		return historialTransaccion;
@@ -85,8 +81,6 @@ public class Cafe {
 	public Map<Calendar, empleado> getTurnoEmpleados() {
 		return turnoEmpleados;
 	}
-	
-	
 
 	public ArrayList<Juego> getJuegosPrestamo() {
 		return juegosPrestamo;
@@ -148,59 +142,74 @@ public class Cafe {
 
 	public void agregarEmpleado(empleado e) {
 		this.empleados.add(e);
-		//Calendar turno = e.getTurno();
-		//this.turnoEmpleados.put(turno, e);
+		// Calendar turno = e.getTurno();
+		// this.turnoEmpleados.put(turno, e);
 	}
-	
+
 	public void agregarMesa(Mesa mesa) {
 		this.mesas.add(mesa);
 	}
-	
+
 	public void agregarUsuario(Cliente cliente) {
 		this.clientes.add(cliente);
 	}
+
 	public void agregarJuegoPrestamo(Juego juego) {
 		this.juegosPrestamo.add(juego);
 	}
+
 	public void agregarJuegoVenta(Juego juego) {
 		this.juegosVenta.add(juego);
 	}
+
 	public boolean reservarJuego(Juego juego, Reserva r) {
-		if (!juegosPrestamo.contains(juego)) return false;
+		if (!juegosPrestamo.contains(juego))
+			return false;
 
-	    Calendar fecha = r.getFecha();
-	    int id = r.getCliente().getId();
+		Calendar fecha = r.getFecha();
+		int id = r.getCliente().getId();
+		int edad = r.getCliente().getEdad();
+		int numPersonas = r.getNumPersonas();
 
-	    // Crear fecha si no existe
-	    historialUsoJuegos.putIfAbsent(fecha, new HashMap<Juego,Reserva>());
-	    juegosCliente.putIfAbsent(id, new ArrayList<Juego>());
+		// Validaciones
+		if (!juego.esAptoParaEdad(edad))
+			return false;
+		if (juego.getNumJugadores() < numPersonas)
+			return false;
 
-	    HashMap<Juego, Reserva> juegosReservados = historialUsoJuegos.get(fecha);
-	    ArrayList<Juego> juegosDelCliente = juegosCliente.get(id);
+		// Crear fecha si no existe
+		historialUsoJuegos.putIfAbsent(fecha, new HashMap<Juego, Reserva>());
+		juegosCliente.putIfAbsent(id, new ArrayList<Juego>());
 
-	    // Ya está reservado ese juego
-	    if (juegosReservados.containsKey(juego)) return false;
+		HashMap<Juego, Reserva> juegosReservados = historialUsoJuegos.get(fecha);
+		ArrayList<Juego> juegosDelCliente = juegosCliente.get(id);
 
-	    // Cliente ya tiene 2 juegos
-	    if (juegosDelCliente.size() >= 2) return false;
+		// Ya está reservado ese juego
+		if (juegosReservados.containsKey(juego))
+			return false;
 
-	    // Reservar
-	    juegosDelCliente.add(juego);
-	    juegosReservados.put(juego, r);
+		// Cliente ya tiene 2 juegos
+		if (juegosDelCliente.size() >= 2)
+			return false;
 
-	    return true;
-	
-		
+		// Reservar
+
+		juegosDelCliente.add(juego);
+		juegosReservados.put(juego, r);
+		return true;
+
 	}
+
 	public double calcularIngresosTotales(Calendar fechaInicio, Calendar fechaFin) {
 		double total = 0;
-		for (Transaccion t: historialTransaccion) {
-	        Calendar fecha = t.getFecha();
-	        if((fecha.equals(fechaInicio)|| fecha.after(fechaInicio)) && (fecha.equals(fechaFin) || fecha.before(fechaFin))) {
-	        	total += t.calcularTotal();
-	        }
+		for (Transaccion t : historialTransaccion) {
+			Calendar fecha = t.getFecha();
+			if ((fecha.equals(fechaInicio) || fecha.after(fechaInicio))
+					&& (fecha.equals(fechaFin) || fecha.before(fechaFin))) {
+				total += t.calcularTotal();
+			}
 		}
 		return total;
 	}
-	
+
 }
