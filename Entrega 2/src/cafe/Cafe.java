@@ -21,7 +21,7 @@ public class Cafe {
 	private ArrayList<Reserva> reservasPrevias;
 	private ArrayList<Juego> juegosPrestamo;
 	private ArrayList<Juego> juegosVenta;
-	private HashMap<Calendar, HashMap<Juego, Reserva>> historialUsoJuegos;
+	private HashMap<Calendar, HashMap<Integer, Reserva>> historialUsoJuegos;
 	private HashMap<Integer, ArrayList<Juego>> juegosCliente;
 	private ArrayList<Transaccion> historialTransaccion;
 
@@ -35,7 +35,7 @@ public class Cafe {
 		this.clientes = new ArrayList<Cliente>();
 		this.empleados = new ArrayList<empleado>();
 		this.reservasPrevias = new ArrayList<Reserva>();
-		this.historialUsoJuegos = new HashMap<Calendar, HashMap<Juego, Reserva>>();
+		this.historialUsoJuegos = new HashMap<Calendar, HashMap<Integer, Reserva>>();
 		this.juegosPrestamo = new ArrayList<Juego>();
 		this.juegosVenta = new ArrayList<Juego>();
 		this.juegosCliente = new HashMap<Integer, ArrayList<Juego>>();
@@ -70,7 +70,7 @@ public class Cafe {
 		return reservasPrevias;
 	}
 
-	public HashMap<Calendar, HashMap<Juego, Reserva>> getHistorialUsoJuegos() {
+	public HashMap<Calendar, HashMap<Integer, Reserva>> getHistorialUsoJuegos() {
 		return historialUsoJuegos;
 	}
 
@@ -178,14 +178,14 @@ public class Cafe {
 			return false;
 
 		// Crear fecha si no existe
-		historialUsoJuegos.putIfAbsent(fecha, new HashMap<Juego, Reserva>());
+		historialUsoJuegos.putIfAbsent(fecha, new HashMap<Integer, Reserva>());
 		juegosCliente.putIfAbsent(id, new ArrayList<Juego>());
 
-		HashMap<Juego, Reserva> juegosReservados = historialUsoJuegos.get(fecha);
+		HashMap<Integer, Reserva> juegosReservados = historialUsoJuegos.get(fecha);
 		ArrayList<Juego> juegosDelCliente = juegosCliente.get(id);
 
 		// Ya está reservado ese juego
-		if (juegosReservados.containsKey(juego))
+		if (juegosReservados.containsKey(juego.getId()))
 			return false;
 
 		// Cliente ya tiene 2 juegos
@@ -195,7 +195,7 @@ public class Cafe {
 		// Reservar
 
 		juegosDelCliente.add(juego);
-		juegosReservados.put(juego, r);
+		juegosReservados.put(juego.getId(), r);
 		return true;
 
 	}
