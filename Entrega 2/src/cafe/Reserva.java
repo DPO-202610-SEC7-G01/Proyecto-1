@@ -15,16 +15,16 @@ public class Reserva {
 	private int numPersonas;
 	private Calendar fecha;
 	private double totalFactura;
-	private List<Cliente> cliente;
+	private List<Cliente> clientes;
 	private List<Producto> transaccion;
 	private List<Juego> juegosPrestados; 
 
 	
 	
 	//Constructor
-	public Reserva(Cliente cliente, int numPersonas, Calendar fecha) {
+	public Reserva(List<Cliente> clientes, int numPersonas, Calendar fecha) {
 		super();
-		this.cliente = new ArrayList<Cliente>();
+		this.clientes = clientes;
 		this.numPersonas = numPersonas;
 		this.fecha = fecha;
 		this.transaccion = new ArrayList<Producto>();
@@ -41,7 +41,7 @@ public class Reserva {
 	}
 	
 	public List<Cliente> getClientes() {
-		return cliente;
+		return clientes;
 	}
 	public Mesa getMesa() {
 		return mesa;
@@ -62,17 +62,18 @@ public class Reserva {
 		this.mesa= nuevaMesa;
 	}
 	//Métodos
-	public void addTransaccion(Producto p) {
-	    // CORRECCIÓN: Usar .add() que es el método de Java para listas
-	    this.transaccion.add(p); 
-	    double precioFinal = p.getPrecio() + p.getTasaImpuesto();
-	    totalFactura += precioFinal;
-	}
+	// Métodos corregidos
+    public void addTransaccion(Producto p) {
+        this.transaccion.add(p); 
+        // El precio final debe ser el base + (base * tasa)
+        double impuesto = p.getPrecio() * p.getTasaImpuesto();
+        this.totalFactura += (p.getPrecio() + impuesto);
+    }
 	
 
 	
 	public boolean tieneMenoresDeEdad() {
-	    for (Cliente c : this.cliente) {
+	    for (Cliente c : this.clientes) { //Corregir esta línea
 	        if (c.getEdad() < 18) {
 	            return true; 
 	        }
@@ -92,11 +93,12 @@ public class Reserva {
 	    return false;
 	}
 	
-	//Por implementar
-	public void agregarAlPrestamo(Juego juego) {
-		//Se mete a 	private HashMap<Calendar, HashMap<Integer, Reserva>> historialUsoJuegos; del café y alista el registro
-		
-	}
+
+	public void agregarAlPrestamo(Juego juego, Cafe miCafe) {
+        if (miCafe.reservarJuego(juego, this)) {
+            this.juegosPrestados.add(juego);
+        }
+    }
 	
 	
 	

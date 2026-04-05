@@ -2,9 +2,11 @@ package interfaz;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import cafe.Cafe;
+import cafe.Reserva;
 import usuario.Cliente;
 import usuario.Mesero;
 import usuario.Cocinero;
@@ -409,6 +411,47 @@ public class Consola {
     }
     
     
+    public void hacerReserva() {
+        System.out.println("\n---  PROCESO DE RESERVA ---");
+        System.out.print("¿Para cuántas personas es la reserva?: ");
+        int numPersonas = lector.nextInt();
+        lector.nextLine(); 
+
+        List<Cliente> listaClientesReserva = new ArrayList<>();
+
+        // 1. Registro/Búsqueda de cada integrante
+        for (int i = 1; i <= numPersonas; i++) {
+            System.out.print("Ingrese login del cliente " + i + " (o escriba 'nuevo' para registrarlo): ");
+            String entrada = lector.nextLine();
+            
+            Usuario u = buscarUsuario(entrada);
+            
+            if (entrada.equalsIgnoreCase("nuevo") || u == null || !(u instanceof Cliente)) {
+                System.out.println("No se encontró el cliente. Procediendo a registro obligatorio...");
+                registrarUsuarioNuevo();
+                u = miCafe.getClientes().get(miCafe.getClientes().size() - 1);
+            }
+            
+            listaClientesReserva.add((Cliente) u);
+        }
+
+        Calendar fechaReserva = Calendar.getInstance();  
+        Reserva nuevaReserva = new Reserva(listaClientesReserva, numPersonas, fechaReserva);
+        int totalAntes = miCafe.getReservasPrevias().size();
+        
+        miCafe.registrarNuevaReserva(nuevaReserva);
+
+        // 5. Verificación de éxito
+        if (miCafe.getReservasPrevias().size() > totalAntes) {
+            System.out.println("\u001B[32m" + "✅ ¡Reserva Exitosa!" + "\u001B[0m");
+            System.out.println("Mesa asignada: " + nuevaReserva.getMesa().getNumSillas());
+            System.out.println("Total de reservas actuales en el café: " + miCafe.getReservasPrevias().size());
+        } else {
+            System.out.println("❌ No se pudo completar la reserva. Verifique disponibilidad de capacidad o mesas.");
+            System.out.println("Total de reservas actuales en el café: " + miCafe.getReservasPrevias().size());
+        }
+    }
+    
     public static void main(String[] args) {
         Consola consola = new Consola();
         Scanner lectorMenu = new Scanner(System.in);
@@ -425,7 +468,8 @@ public class Consola {
             System.out.println("4. Ingreso de juegos favoritos");
             System.out.println("5. Comprar Productos");
             System.out.println("6. Afiliar un Amigo");
-            System.out.println("7. Salir");
+            System.out.println("7. Hacer una Reserva");
+            System.out.println("8. Salir");
             System.out.print("Seleccione una opción: ");
             
             try {
@@ -456,6 +500,9 @@ public class Consola {
                         consola.afiliarAmigo();
                         break;
                     case 7:
+                    	consola.hacerReserva();
+                        break;
+                    case 8:
                         System.out.println(" Saliendo del sistema... ¡Hasta luego!");
                         break;
                       
