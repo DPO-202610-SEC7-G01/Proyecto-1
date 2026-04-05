@@ -1,10 +1,13 @@
 package usuario;
 
-public class administrador extends Usuario {
+import cafe.Cafe;
 
-	public administrador(int id, String login, String password, String nombre) {
+public class administrador extends Usuario {
+	private Cafe cafe;
+	public administrador(int id, String login, String password, String nombre, Cafe cafe) {
 		super(id, login, password, nombre);
-		// TODO Auto-generated constructor stub
+		this.cafe = cafe;
 	}
+	
 
 }
