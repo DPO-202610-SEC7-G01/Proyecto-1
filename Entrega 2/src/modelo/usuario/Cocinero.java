@@ -1,10 +1,10 @@
-package usuario;
+package modelo.usuario;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import producto.Bebida;
-import producto.Platillo;
+import modelo.producto.Bebida;
+import modelo.producto.Platillo;
 
 public class Cocinero extends Empleado{
 	private List<Platillo> platillosConocidos;

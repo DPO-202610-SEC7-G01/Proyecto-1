@@ -1,12 +1,12 @@
-package usuario;
+package modelo.usuario;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import producto.Juego;
-import producto.Producto;
-import cafe.Transaccion;
+import modelo.producto.Juego;
+import modelo.producto.Producto;
+import modelo.Transaccion;
 
 public class Cliente extends Usuario {
 	private int edad;

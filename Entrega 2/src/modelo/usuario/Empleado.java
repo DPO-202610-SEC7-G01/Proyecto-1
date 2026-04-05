@@ -1,15 +1,15 @@
-package usuario;
+package modelo.usuario;
 
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
 
-import cafe.Transaccion;
-import cafe.Cafe;
-import producto.Juego;
-import producto.Platillo;
-import producto.Producto;
+import modelo.Transaccion;
+import modelo.Cafe;
+import modelo.producto.Juego;
+import modelo.producto.Platillo;
+import modelo.producto.Producto;
 
 public class Empleado extends Usuario {
 	private int puntosFidelidad;

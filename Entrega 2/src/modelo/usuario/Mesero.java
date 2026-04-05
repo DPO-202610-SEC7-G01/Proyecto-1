@@ -1,13 +1,13 @@
-package usuario;
+package modelo.usuario;
 
 import java.util.ArrayList;
 import java.util.List;
-import producto.JuegoDificil;
-import producto.Platillo;
-import producto.Bebida;
-import producto.Juego;
-import cafe.Reserva;
-import cafe.Cafe;
+import modelo.producto.JuegoDificil;
+import modelo.producto.Platillo;
+import modelo.producto.Bebida;
+import modelo.producto.Juego;
+import modelo.Reserva;
+import modelo.Cafe;
 
 
 public class Mesero extends Empleado{

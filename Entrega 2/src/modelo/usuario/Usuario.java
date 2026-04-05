@@ -1,4 +1,4 @@
-package usuario;
+package modelo.usuario;
 
 public abstract class Usuario {
 	private int id;
