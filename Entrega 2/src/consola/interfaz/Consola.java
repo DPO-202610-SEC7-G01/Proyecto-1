@@ -29,6 +29,7 @@ public class Consola {
 	private Scanner lector;
 	private Random aleatorio;
 	private int opcion = 0;
+
 	public Consola() {
 		this.miCafe = new Cafe(50);
 
@@ -595,14 +596,13 @@ public class Consola {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Ingrese la fecha (dd/MM/yyyy): ");
 		String input = sc.nextLine();
-		sc.close();
 		// Parsear a LocalDate
 		LocalDate fecha = LocalDate.parse(input, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		// Convertir a Calendar
 		Calendar cal = Calendar.getInstance();
 		cal.set(fecha.getYear(), fecha.getMonthValue() - 1, fecha.getDayOfMonth());
 		// Evita duplicar el turno
-		if (empleadoActivo.getTurno().contains(cal)) {
+		if (tieneTurno(empleadoActivo.getTurno(), cal)) {
 			System.out.println("El empleado ya tiene este turno asignado.");
 			return;
 		} else {
@@ -640,7 +640,6 @@ public class Consola {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Ingrese la fecha del turno(dd/MM/yyyy): ");
 		String input = sc.nextLine();
-		sc.close();
 		// Parsear a LocalDate
 		LocalDate fecha = LocalDate.parse(input, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		// Convertir a Calendar
@@ -648,25 +647,24 @@ public class Consola {
 		cal.set(fecha.getYear(), fecha.getMonthValue() - 1, fecha.getDayOfMonth());
 		System.out.print("Ingrese la fecha del turno(dd/MM/yyyy): ");
 		String input2 = sc.nextLine();
-		sc.close();
 		// Parsear a LocalDate
 		LocalDate fechaNuevo = LocalDate.parse(input2, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		// Convertir a Calendar
 		Calendar nuevoTurno = Calendar.getInstance();
 		nuevoTurno.set(fechaNuevo.getYear(), fechaNuevo.getMonthValue() - 1, fechaNuevo.getDayOfMonth());
 
-		if (empleadoActivo.getTurno().contains(cal)) {
-			boolean cambio = empleadoActivo.pedirCambioTurno(miCafe.getAdmin(), cal, nuevoTurno, empleadoActivo);
-			if (cambio == true) {
-				System.out.println("Turno cambiado con exito.");
-				return;
-			} else {
-				System.out.println("Cambio de turno denegado, comuniquese con el administrador.");
-				return;
-			}
+		if (tieneTurno(empleadoActivo.getTurno(), cal)) {
+		    boolean cambio = empleadoActivo.pedirCambioTurno(
+		        miCafe.getAdmin(), cal, nuevoTurno, empleadoActivo
+		    );
+
+		    if (cambio) {
+		        System.out.println("Turno cambiado con exito.");
+		    } else {
+		        System.out.println("Cambio de turno denegado.");
+		    }
 		} else {
-			System.out.println("El empleado no tiene asignado ese turno, agregelo o intente de nuevo.");
-			return;
+		    System.out.println("El empleado no tiene asignado ese turno.");
 		}
 
 	}
@@ -755,11 +753,24 @@ public class Consola {
 		return null;
 	}
 
+	public boolean mismoDia(Calendar c1, Calendar c2) {
+		return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)
+				&& c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH);
+	}
+
+	public boolean tieneTurno(List<Calendar> turnos, Calendar buscado) {
+		for (Calendar c : turnos) {
+			if (mismoDia(c, buscado)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static void main(String[] args) {
 		Consola consola = new Consola();
 		Scanner lectorMenu = new Scanner(System.in);
 		int opcion = 0;
-		
 
 		System.out.println("BIENVENIDO A DULCES N DADOS ");
 
