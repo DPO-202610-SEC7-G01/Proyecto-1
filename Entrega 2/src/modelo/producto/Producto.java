@@ -1,4 +1,4 @@
-package producto;
+package modelo.producto;
 
 public  abstract class Producto {
 	private int id;

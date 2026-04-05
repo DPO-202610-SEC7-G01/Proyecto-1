@@ -1,4 +1,4 @@
-package producto;
+package modelo.producto;
 
 public class Juego extends Producto{
 	
