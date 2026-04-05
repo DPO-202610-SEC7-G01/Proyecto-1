@@ -1,24 +1,27 @@
-package interfaz;
+package consola.interfaz;
 
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import cafe.Cafe;
-import cafe.Reserva;
-import usuario.Cliente;
-import usuario.Mesero;
-import usuario.Cocinero;
-import usuario.Empleado;
-import usuario.Usuario;
-import usuario.Administrador;
-import producto.Juego;
-import producto.Producto;
-import producto.Bebida;
-import cafe.Transaccion;
-import producto.Platillo;
-import cafe.Mesa;
+import modelo.Cafe;
+import modelo.Reserva;
+import modelo.Transaccion;
+import modelo.Mesa;
+
+import modelo.usuario.Cliente;
+import modelo.usuario.Mesero;
+import modelo.usuario.Cocinero;
+import modelo.usuario.Empleado;
+import modelo.usuario.Usuario;
+import modelo.usuario.Administrador;
+
+import modelo.producto.Juego;
+import modelo.producto.Producto;
+import modelo.producto.Bebida;
+import modelo.producto.Platillo;
+
 
 public class Consola {
     private Cafe miCafe;
