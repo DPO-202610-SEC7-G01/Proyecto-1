@@ -5,17 +5,19 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import producto.Juego;
-import usuario.empleado;
+import usuario.Empleado;
 import usuario.Mesero;
 import usuario.Cliente;
 import usuario.Cocinero;
+import usuario.Administrador;
 
 public class Cafe {
 
 	private int capacidad;
+	private Administrador admin;
 	private ArrayList<Mesa> mesas;
 	private ArrayList<Cliente> clientes;
-	private ArrayList<empleado> empleados;
+	private ArrayList<Empleado> empleados;
 	private ArrayList<Reserva> reservasPrevias;
 	private ArrayList<Juego> juegosPrestamo;
 	private ArrayList<Juego> juegosVenta;
@@ -23,7 +25,7 @@ public class Cafe {
 	private HashMap<Integer, ArrayList<Juego>> juegosCliente;
 	private ArrayList<Transaccion> historialTransaccion;
 
-	private Map<Calendar, empleado> turnoEmpleados;
+	private Map<Calendar, Empleado> turnoEmpleados;
 
 	// Constructor
 	public Cafe(int capacidad) {
@@ -31,21 +33,25 @@ public class Cafe {
 		this.capacidad = capacidad;
 		this.mesas = new ArrayList<Mesa>();
 		this.clientes = new ArrayList<Cliente>();
-		this.empleados = new ArrayList<empleado>();
+		this.empleados = new ArrayList<Empleado>();
 		this.reservasPrevias = new ArrayList<Reserva>();
 		this.historialUsoJuegos = new HashMap<Calendar, HashMap<Integer, Reserva>>();
 		this.juegosPrestamo = new ArrayList<Juego>();
 		this.juegosVenta = new ArrayList<Juego>();
 		this.juegosCliente = new HashMap<Integer, ArrayList<Juego>>();
 		this.historialTransaccion = new ArrayList<Transaccion>();
-		this.turnoEmpleados = new HashMap<Calendar, empleado>();
-
+		this.turnoEmpleados = new HashMap<Calendar, Empleado>();
+		this.admin = null;
 	}
 
 	// Getters
 
 	public int getCapacidad() {
 		return capacidad;
+	}
+	
+	public Administrador getAdmin() {
+		return admin;
 	}
 
 	public void actualizarCapacidad(int capacidad) {
@@ -60,7 +66,7 @@ public class Cafe {
 		return clientes;
 	}
 
-	public ArrayList<empleado> getEmpleados() {
+	public ArrayList<Empleado> getEmpleados() {
 		return empleados;
 	}
 
@@ -76,7 +82,7 @@ public class Cafe {
 		return historialTransaccion;
 	}
 
-	public Map<Calendar, empleado> getTurnoEmpleados() {
+	public Map<Calendar, Empleado> getTurnoEmpleados() {
 		return turnoEmpleados;
 	}
 
@@ -89,11 +95,15 @@ public class Cafe {
 	}
 
 	// Métodos
+	public void cambiarAdmin(Administrador adminNuevo) {
+		admin= adminNuevo;
+	}
+	
 	public void registrarNuevaReserva(Reserva r) {
 		if ((verificarDisponibilidad(r.getFecha(), r.getNumPersonas())) && asignarMesa(r)) {
 			reservasPrevias.add(r);
-			Cliente cliente = r.getCliente();
-			cliente.sumarPuntos();
+			Cliente cliente = r.getCliente(); //Son Varios Clientes
+			cliente.sumarPuntos(); //Se debe meter a sumar individualmente y decir cuanto se le va a sumar al cliente por la reserva 
 		}
 	}
 
@@ -108,9 +118,9 @@ public class Cafe {
 		int cocineros = 0;
 		int meseros = 0;
 
-		for (Map.Entry<Calendar, empleado> entrada : turnoEmpleados.entrySet()) {
+		for (Map.Entry<Calendar, Empleado> entrada : turnoEmpleados.entrySet()) {
 			Calendar fechaTurno = entrada.getKey();
-			empleado e = entrada.getValue();
+			Empleado e = entrada.getValue();
 			if (esMismaFecha(fechaTurno, fechaConsulta)) {
 				if (e instanceof Mesero) {
 					meseros++;
@@ -138,7 +148,7 @@ public class Cafe {
 		return false;
 	}
 
-	public void agregarEmpleado(empleado e) {
+	public void agregarEmpleado(Empleado e) {
 		this.empleados.add(e);
 		// Calendar turno = e.getTurno();
 		// this.turnoEmpleados.put(turno, e);
@@ -165,7 +175,7 @@ public class Cafe {
 			return false;
 
 		Calendar fecha = r.getFecha();
-		int id = r.getCliente().getId();
+		int id = r.getClientes().getId(); //Es una lista de clientes 
 		int edad = r.getCliente().getEdad();
 		int numPersonas = r.getNumPersonas();
 
@@ -189,8 +199,6 @@ public class Cafe {
 		// Cliente ya tiene 2 juegos
 		if (juegosDelCliente.size() >= 2)
 			return false;
-
-		// Reservar
 
 		juegosDelCliente.add(juego);
 		juegosReservados.put(juego.getId(), r);

@@ -1,27 +1,31 @@
 package usuario;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import producto.Juego;
+import producto.Producto;
+import cafe.Transaccion;
 
 public class Cliente extends Usuario {
-	private int puntosFidelidad;
 	private int edad;
+	private String alergenos;
+	private int puntosFidelidad;
+	private boolean amigos;
 	private List<Juego> juegosFavoritos;
-	public Cliente(int id, String login, String password, String nombre, int edad) {
+	
+	//Constructor
+	public Cliente(int id, String login, String password, String nombre, int edad,String alergenos) {
 		super(id, login, password, nombre);
-		// TODO Auto-generated constructor stub
 		this.edad = edad;
-		this.juegosFavoritos = new ArrayList<Juego>();
 		this.puntosFidelidad = 0;
+		this.alergenos= alergenos;
+		this.juegosFavoritos = new ArrayList<Juego>();
+		this.amigos = false;
 	}
-	public void agregarJuegoFavorito(Juego juego) {
-		this.juegosFavoritos.add(juego);
-	}
-	public void sumarPuntos() {
-		this.puntosFidelidad += 1;
-	}
+	
+	//Getters Y Setter
 	public int getPuntosFidelidad() {
 		return puntosFidelidad;
 	}
@@ -32,4 +36,26 @@ public class Cliente extends Usuario {
 		return juegosFavoritos;
 	}
 	
+	public String getAlergenos() {
+		return alergenos;
+	}
+	//Métodos
+	public void nuevoAmigo() {
+		amigos = true;
+	}
+	
+	public void agregarJuegoFavorito(Juego juego) {
+		this.juegosFavoritos.add(juego);
+	}
+	
+	public void sumarPuntosFidelidad(int puntosFidelidad) {
+		this.puntosFidelidad += puntosFidelidad;
+	}
+	
+	public Transaccion generarTransaccion(List<Producto> productosComprados, int idNuevaTransaccion) {
+	    Calendar hoy = Calendar.getInstance();
+	    Transaccion factura = new Transaccion(idNuevaTransaccion, hoy, productosComprados, this, this.amigos);    
+	    this.sumarPuntosFidelidad(productosComprados.size() ); 
+	    return factura; // Existe un método que calcula el monto final c: 
+	}
 }
