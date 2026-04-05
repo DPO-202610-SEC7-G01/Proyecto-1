@@ -17,7 +17,8 @@ public class Reserva {
 	private Calendar fecha;
 	private double totalFactura;
 	private List<Cliente> cliente;
-	private List<Producto> transacciones;
+	private List<Producto> transaccion;
+	private List<Juego> juegosPrestados; 
 
 	
 	
@@ -27,7 +28,7 @@ public class Reserva {
 		this.cliente = new ArrayList<Cliente>();
 		this.numPersonas = numPersonas;
 		this.fecha = fecha;
-		this.transacciones = new ArrayList<Transaccion>();
+		this.transaccion = new ArrayList<Producto>();
 		
 	}
 	
@@ -46,15 +47,28 @@ public class Reserva {
 	public Mesa getMesa() {
 		return mesa;
 	}
+	public List<Producto> getFactura() {
+		return transaccion;
+	}
+	
+	public double getTotalFactura() {
+		return totalFactura;
+	}
+
+	public List<Juego> getJuegosPrestados(){
+		return juegosPrestados;
+	}
 	
 	
 	//Métodos
 	public void addTransaccion(Producto p) {
-	    // Calculamos el precio con impuestos (IVA o Impoconsumo) y descuentos
+	    // CORRECCIÓN: Usar .add() que es el método de Java para listas
+	    this.transaccion.add(p); 
 	    double precioFinal = p.getPrecio() + p.getTasaImpuesto();
-	    this.transacciones.add(p); 
 	    totalFactura += precioFinal;
 	}
+	
+
 	
 	public boolean tieneMenoresDeEdad() {
 	    for (Cliente c : this.cliente) {
@@ -66,7 +80,7 @@ public class Reserva {
 	}
 	
 	public boolean tieneBebidasCalientes() {
-	    for (Producto p : this.transacciones) {
+	    for (Producto p : this.transaccion) {
 	        if (p instanceof Bebida) {
 	            Bebida b = (Bebida) p; 
 	            if (b.getTemperatura().equalsIgnoreCase("Caliente")) {
@@ -78,7 +92,7 @@ public class Reserva {
 	}
 	
 	//Por implementar
-	public void agregarAlPrestamo() {
+	public void agregarAlPrestamo(Juego juego) {
 		//Se mete a 	private HashMap<Calendar, HashMap<Integer, Reserva>> historialUsoJuegos; del café y alista el registro
 		
 	}
