@@ -6,9 +6,12 @@ import java.util.List;
 import producto.Juego;
 import producto.Producto;
 import producto.Bebida;
+import producto.Platillo;
 
 import java.util.ArrayList;
 import usuario.Cliente;
+import usuario.Mesero;
+import cafe.Cafe;
 
 public class Reserva {
 	private Mesa mesa;
@@ -18,6 +21,8 @@ public class Reserva {
 	private List<Cliente> clientes;
 	private List<Producto> transaccion;
 	private List<Juego> juegosPrestados; 
+	private Cafe miCafe;
+	private Mesero meseroAsignado;
 
 	
 	
@@ -61,11 +66,18 @@ public class Reserva {
 	public void setMesa(Mesa nuevaMesa) {
 		this.mesa= nuevaMesa;
 	}
+	
+
+	public Mesero getMeseroAsignado() {
+	    return meseroAsignado;
+	}
 	//Métodos
-	// Métodos corregidos
+	public void cambiarMesero(Mesero nuevoMesero) {
+	    this.meseroAsignado = nuevoMesero;
+	}
+	
     public void addTransaccion(Producto p) {
         this.transaccion.add(p); 
-        // El precio final debe ser el base + (base * tasa)
         double impuesto = p.getPrecio() * p.getTasaImpuesto();
         this.totalFactura += (p.getPrecio() + impuesto);
     }
@@ -73,7 +85,7 @@ public class Reserva {
 
 	
 	public boolean tieneMenoresDeEdad() {
-	    for (Cliente c : this.clientes) { //Corregir esta línea
+	    for (Cliente c : this.clientes) { 
 	        if (c.getEdad() < 18) {
 	            return true; 
 	        }
@@ -94,12 +106,15 @@ public class Reserva {
 	}
 	
 
-	public void agregarAlPrestamo(Juego juego, Cafe miCafe) {
+	public void agregarAlPrestamo(Juego juego) {
         if (miCafe.reservarJuego(juego, this)) {
             this.juegosPrestados.add(juego);
         }
-    }
-	
+        
+	} 
+
+
+   
 	
 	
 }

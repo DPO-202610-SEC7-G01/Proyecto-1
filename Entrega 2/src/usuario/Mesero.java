@@ -7,10 +7,12 @@ import producto.Platillo;
 import producto.Bebida;
 import producto.Juego;
 import cafe.Reserva;
+import cafe.Cafe;
 
 
 public class Mesero extends Empleado{
 	private List<JuegoDificil> juegosConocidos;
+	private Cafe miCafe;
 	
 	//Constructor
 	public Mesero(int id, String login, String password, String nombre) {
@@ -44,12 +46,19 @@ public class Mesero extends Empleado{
 	}
 	
 	public void servirPlatillos(Reserva r, Platillo p) {
-	    boolean aptoParaTodos = true;
+	    // 1. Obtener cocinero de turno desde la instancia actual (this)
+	    Cocinero cocineroDeTurno = miCafe.turnoCocineros(r.getFecha());
+	    
+	    // Validaciones silenciosas
+	    if (cocineroDeTurno == null || !cocineroDeTurno.getPlatillosConocidos().contains(p)) {
+	        return;
+	    }
 
-	    // 1. Validación de alérgenos
+	    // 2. Validación de alérgenos
+	    boolean aptoParaTodos = true;
 	    for (Cliente c : r.getClientes()) {
 	        for (String ingrediente : p.getAlergeneos().split(",")) {
-	            if (c.getAlergenos().contains(ingrediente.trim())) {
+	            if (c.getAlergenos().toLowerCase().contains(ingrediente.trim().toLowerCase())) {
 	                aptoParaTodos = false;
 	                break; 
 	            }
@@ -57,22 +66,28 @@ public class Mesero extends Empleado{
 	        if (!aptoParaTodos) break;
 	    }
 
-	    // 2. Si es apto, se agrega a la lista de transacciones (que recibe Productos)
+	    // 3. Ejecución de la transacción
 	    if (aptoParaTodos) {
-	        r.addTransaccion(p); 
+	        r.addTransaccion(p);
 	    } 
 	}
-	
+
 	public void servirBebidas(Reserva r, Bebida b) {
-	    // REGLA 1: Menores de edad y Alcohol
+	    // 1. Obtener cocinero de turno
+	    Cocinero cocineroDeTurno = miCafe.turnoCocineros(r.getFecha());
+	    
+	    if (cocineroDeTurno == null || !cocineroDeTurno.getBebidasConocidas().contains(b)) {
+	        return;
+	    }
+
+	    // 2. Regla de alcohol y menores
 	    if (r.tieneMenoresDeEdad() && b.isTieneAlcohol()) {
 	        return;
 	    }
 
-	    // REGLA 2: Juegos de Acción y Bebidas Calientes
+	    // 3. Regla de seguridad (Juegos de Acción + Bebidas Calientes)
 	    boolean tieneJuegoAccion = false;
 	    for (Juego j : r.getJuegosPrestados()) {
-	        // Comparamos la categoría del juego
 	        if (j.getCategoria().equalsIgnoreCase("Acción")) {
 	            tieneJuegoAccion = true;
 	            break;
@@ -83,8 +98,9 @@ public class Mesero extends Empleado{
 	        return;
 	    }
 
-	    // 3. Si pasa las reglas, se agrega como Producto
+	    // 4. Ejecución de la transacción
 	    r.addTransaccion(b);
 	}
+	
 
 }

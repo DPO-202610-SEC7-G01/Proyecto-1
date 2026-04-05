@@ -48,6 +48,12 @@ public class Transaccion {
 	}
 	
 	//Métodos
+	public void agregarProducto(Producto p) {
+	    if (p != null) {
+	        this.productos.add(p);
+	    }
+	}
+	
 	public int calcularTotal() {
 		double total = 0;
 		for (int i = 0; i < this.productos.size(); i++) {

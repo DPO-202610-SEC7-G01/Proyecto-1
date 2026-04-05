@@ -58,4 +58,6 @@ public class Cliente extends Usuario {
 	    this.sumarPuntosFidelidad(productosComprados.size() ); 
 	    return factura; // Existe un método que calcula el monto final c: 
 	}
+	
+	
 }

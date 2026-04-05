@@ -13,6 +13,8 @@ import usuario.Cocinero;
 import usuario.Administrador;
 import producto.Platillo;
 import producto.Bebida;
+import producto.Producto;
+
 public class Cafe {
 
 	private int capacidad;
@@ -267,5 +269,22 @@ public class Cafe {
 		}
 		return total;
 	}
+	
+	// Dentro de la clase Cafe
+	public void registrarProductoEnTransaccion(Transaccion t, Producto p) {
+	    t.agregarProducto(p);
+	    // Si la transacción no estaba en el historial, la agregamos (evita duplicados)
+	    if (!historialTransaccion.contains(t)) {
+	        historialTransaccion.add(t);
+	    }
+	}
 
+	public Cocinero turnoCocineros(Calendar fecha) {
+	    Empleado empleadoAsignado = turnoEmpleados.get(fecha);
+	    if (empleadoAsignado != null && empleadoAsignado instanceof Cocinero) {
+	        return (Cocinero) empleadoAsignado;
+	    }
+
+	    return null;
+	}
 }
