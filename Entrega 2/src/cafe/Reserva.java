@@ -1,7 +1,6 @@
 package cafe;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import producto.Juego;
@@ -59,7 +58,9 @@ public class Reserva {
 		return juegosPrestados;
 	}
 	
-	
+	public void setMesa(Mesa nuevaMesa) {
+		this.mesa= nuevaMesa;
+	}
 	//Métodos
 	public void addTransaccion(Producto p) {
 	    // CORRECCIÓN: Usar .add() que es el método de Java para listas

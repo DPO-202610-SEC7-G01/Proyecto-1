@@ -13,7 +13,9 @@ import usuario.Usuario;
 import usuario.Administrador;
 import producto.Juego;
 import producto.Producto;
+import producto.Bebida;
 import cafe.Transaccion;
+import producto.Platillo;
 
 public class Consola {
     private Cafe miCafe;
@@ -35,7 +37,25 @@ public class Consola {
                 "Tablero"         // categoria
             );
 
+         
+        Bebida bebidaInicial = new Bebida(
+                201, 
+                12000, 
+                "Café Americano", 
+                "Caliente", 
+                false
+            );
+         Platillo platilloInicial = new Platillo(
+        	        101, 
+        	        25000, 
+        	        "Sandwich de Pavo", 
+        	        "Gluten, Lácteos"
+        	    );
          miCafe.getJuegosVenta().add(juegoInicial);
+         miCafe.getJuegosPrestamo().add(juegoInicial);
+         miCafe.getMenuBebidas().add(bebidaInicial);
+         miCafe.getMenuPlatillos().add(platilloInicial);
+         
     }
 
     public void registrarAdministrador() {
@@ -57,7 +77,7 @@ public class Consola {
             System.out.println("Hubo un cambio exitoso de la administración");
         }
         miCafe.cambiarAdmin(new Administrador(id, login, password, nombre, miCafe));
-        System.out.println("✅ Registro exitoso. Login: " + login + " (ID: " + id + ")");
+        System.out.println("Registro exitoso con el login: " + login );
     }
     
     public void registrarUsuarioNuevo() {
@@ -111,7 +131,7 @@ public class Consola {
                 return;
         }
 
-        System.out.println("✅ Registro exitoso. Login: " + login + " (ID: " + id + ")");
+        System.out.println("Registro exitoso con el login: " + login );
     }
 
     public void cambioContraseña() {
@@ -143,39 +163,251 @@ public class Consola {
         return null;
     }
     
+    public void ingresarJuegoFav() {
+        System.out.println("\n--- AGREGAR JUEGO A FAVORITOS ---");
+        System.out.print("Ingrese su login de usuario: ");
+        String loginBusqueda = lector.nextLine();
+
+        // 1. Buscamos al usuario usando la función auxiliar
+        Usuario usuarioEncontrado = buscarUsuario(loginBusqueda);
+
+        if (usuarioEncontrado != null) {
+            // 2. Validamos que el café tenga juegos para mostrar
+            if (miCafe.getJuegosVenta().isEmpty()) {
+                System.out.println("❌No hay juegos registrados en el catálogo del café.");
+                return;
+            }
+
+            System.out.println("Seleccione el juego que desea agregar:");
+            for (int i = 0; i < miCafe.getJuegosVenta().size(); i++) {
+                System.out.println(i + ". " + miCafe.getJuegosVenta().get(i).getNombre());
+            }
+
+            System.out.print("Ingrese el número del juego: ");
+            int indice = lector.nextInt();
+            lector.nextLine(); // Limpiar el salto de línea del buffer
+
+            if (indice >= 0 && indice < miCafe.getJuegosVenta().size()) {
+                Juego juegoElegido = miCafe.getJuegosVenta().get(indice);
+
+                if (usuarioEncontrado instanceof Cliente) {
+                    Cliente c = (Cliente) usuarioEncontrado;
+                    c.agregarJuegoFavorito(juegoElegido);
+                } else if (usuarioEncontrado instanceof Empleado) {
+                    Empleado e = (Empleado) usuarioEncontrado;
+                    e.agregarJuegoFavorito(juegoElegido);
+                }
+
+                System.out.println( juegoElegido.getNombre() + 
+                                   " ha sido añadido a los favoritos de " + 
+                                   usuarioEncontrado.getNombre() );
+            } else {
+                System.out.println("Opción de juego no válida.");
+            }
+        } else {
+            System.out.println(" Error: No se encontró ningún usuario con el login: " + loginBusqueda);
+        }
+    }
+
+    
     public void simularCompra() {
-        System.out.println("\n--- SIMULACIÓN DE COMPRA ---");
+        System.out.println("\n--- SIMULACIÓN DE COMPRA INTERACTIVA ---");
         System.out.print("Ingrese su login: ");
         String login = lector.nextLine();
         Usuario u = buscarUsuario(login);
 
-        if (u != null) {
-            List<Producto> carrito = new ArrayList<>();
-            if (!miCafe.getJuegosVenta().isEmpty()) {
-                carrito.add(miCafe.getJuegosVenta().get(0)); 
-            }
-
-            Transaccion t = null;
-            int idT = aleatorio.nextInt(10000);
-
-            // Polimorfismo: Llamamos al método generarTransaccion de cada clase
-            if (u instanceof Cliente) {
-                t = ((Cliente) u).generarTransaccion(carrito, idT);
-            } else if (u instanceof Empleado) {
-                t = ((Empleado) u).generarTransaccion(carrito, idT);
-            }
-
-            if (t != null) {
-                miCafe.getHistorialTransaccion().add(t);
-                System.out.println("\n--- FACTURA GENERADA ---");
-                System.out.println("Cliente: " + u.getNombre());
-                System.out.println("Total a pagar: $" + t.calcularTotal());
-            }
-        } else {
-            System.out.println("Usuario no encontrado. Por favor creelo:");
+        if (u == null) {
+            System.out.println("Usuario no encontrado. Por favor, regístrese:");
             registrarUsuarioNuevo();
+            return; 
+        }
+
+        List<Producto> carrito = new ArrayList<>();
+        boolean comprando = true;
+
+        // 1. Bucle de selección de productos
+        while (comprando) {
+            System.out.println("\n--- CATÁLOGO DISPONIBLE ---");
+            System.out.println("1. Ver Juegos de Mesa");
+            System.out.println("2. Ver Menú (Platillos y Bebidas)");
+            System.out.println("3. Finalizar Compra y Pagar");
+            System.out.print("Seleccione una categoría: ");
+            
+            int cat = lector.nextInt();
+            lector.nextLine();
+
+            if (cat == 1) {
+                mostrarYAgregar(miCafe.getJuegosVenta(), carrito);
+            } else if (cat == 2) {
+                List<Producto> menuCompleto = new ArrayList<>();
+                menuCompleto.addAll(miCafe.getMenuPlatillos());
+                menuCompleto.addAll(miCafe.getMenuBebidas());
+                mostrarYAgregar(menuCompleto, carrito);
+            } else if (cat == 3) {
+                if (carrito.isEmpty()) {
+                    System.out.println("El carrito está vacío. Compra cancelada.");
+                    return;
+                }
+                comprando = false;
+            }
+        }
+
+        // 2. Validación de Amistad (Solo para Clientes)
+        if (u instanceof Cliente) {
+            Cliente c = (Cliente) u;
+            System.out.print("¿Es amigo de algún empleado? (si/no): ");
+            if (lector.nextLine().equalsIgnoreCase("si")) {
+                if (verificarSiEsAmigo(c)) {
+                    c.nuevoAmigo();
+                    System.out.println("✨ Descuento de amigo ACTIVADO.");
+                } else {
+                    System.out.println("❌ No estás en la lista de amigos oficial.");
+                }
+            }
+        }
+
+        // 3. Generación y Registro
+        int idT = aleatorio.nextInt(10000);
+        Transaccion t = null;
+        if (u instanceof Cliente) t = ((Cliente) u).generarTransaccion(carrito, idT);
+        else if (u instanceof Empleado) t = ((Empleado) u).generarTransaccion(carrito, idT);
+
+        if (t != null) {
+            miCafe.getHistorialTransaccion().add(t);
+            imprimirFacturaDetallada(t, u);
         }
     }
+
+    private boolean verificarSiEsAmigo(Cliente cliente) {
+        for (Empleado e : miCafe.getEmpleados()) {
+            if (e.getAmigos().contains(cliente)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void imprimirFacturaDetallada(Transaccion t, Usuario u) {
+        String verde = "\u001B[32m";
+        String cursiva = "\u001B[3m";
+        String reset = "\u001B[0m";
+
+        System.out.println("\n========================================");
+        System.out.println("           FACTURA DE VENTA           ");
+        System.out.println("          ID: " + t.getId());
+        System.out.println("========================================");
+        System.out.println("Fecha: " + t.getFecha().getTime());
+        System.out.println("Cliente: " + u.getNombre());
+        System.out.println("----------------------------------------");
+        
+        double subtotalNeto = 0;
+        double totalImpuestos = 0;
+
+        // Listar productos comprados
+        for (Producto p : t.getProductos()) {
+            double precioBase = p.getPrecio();
+            double tasa = p.getTasaImpuesto(); // IVA o Impoconsumo
+            double impuestoProducto = precioBase * tasa;
+            
+            System.out.printf("- %-18s | $%d (Imp: %.0f%%)\n", 
+                p.getNombre(), (int)precioBase, tasa * 100);
+            
+            subtotalNeto += precioBase;
+            totalImpuestos += impuestoProducto;
+        }
+
+        // Cálculos de totales
+        double totalConImpuestos = subtotalNeto + totalImpuestos;
+        int totalPagar = t.calcularTotal(); // Este ya trae los descuentos aplicados
+        double ahorro = totalConImpuestos - totalPagar;
+
+        System.out.println("----------------------------------------");
+        System.out.println("Subtotal (Base):     $" + (int)subtotalNeto);
+        System.out.println("Total Impuestos:     $" + (int)totalImpuestos);
+        
+        if (ahorro > 0) {
+            System.out.println(cursiva + "Ahorro aplicado:    -$" + (int)ahorro + reset);
+        }
+        
+        System.out.println("----------------------------------------");
+        System.out.println(verde + "TOTAL A PAGAR:       $" + totalPagar + reset);
+        System.out.println("========================================\n");
+    }
+    
+    // Método genérico para mostrar cualquier lista de productos y agregarlos al carrito
+    private void mostrarYAgregar(List<? extends Producto> lista, List<Producto> carrito) {
+        if (lista.isEmpty()) {
+            System.out.println("No hay productos en esta categoría.");
+            return;
+        }
+
+        for (int i = 0; i < lista.size(); i++) {
+            Producto p = lista.get(i);
+            System.out.println(i + ". " + p.getNombre() + " ($" + p.getPrecio() + ")");
+        }
+        
+        System.out.print("Seleccione el número del producto para agregar (o -1 para volver): ");
+        int sel = lector.nextInt();
+        lector.nextLine();
+
+        if (sel >= 0 && sel < lista.size()) {
+            carrito.add(lista.get(sel));
+            System.out.println("✅ " + lista.get(sel).getNombre() + " añadido al carrito.");
+        }
+    }
+    
+    private void afiliarAmigo() {
+        System.out.println("\n--- AFILIACIÓN DE AMIGO DE EMPLEADO ---");
+        
+        // 1. Autenticación del Empleado
+        System.out.print("Login del Empleado: ");
+        String loginEmp = lector.nextLine();
+        System.out.print("Contraseña del Empleado: ");
+        String passEmp = lector.nextLine();
+
+        Usuario auth = buscarUsuario(loginEmp);
+
+        // Validamos que el usuario exista, sea un Empleado y la contraseña coincida
+        if (auth instanceof Empleado && auth.getPassword().equals(passEmp)) {
+            Empleado empleadoActivo = (Empleado) auth;
+            
+            // 2. Búsqueda del Cliente
+            System.out.print("Ingrese el login del Cliente a afiliar: ");
+            String loginCli = lector.nextLine();
+            Usuario buscado = buscarUsuario(loginCli);
+            
+            Cliente clienteAAfiliar = null;
+
+            if (buscado instanceof Cliente) {
+                clienteAAfiliar = (Cliente) buscado;
+            } else {
+                System.out.println("El cliente no existe. Iniciando registro...");
+                registrarUsuarioNuevo(); 
+                // Después de registrar, intentamos recuperarlo (sería el último de la lista)
+                List<Cliente> clientes = miCafe.getClientes();
+                if (!clientes.isEmpty()) {
+                    clienteAAfiliar = clientes.get(clientes.size() - 1);
+                }
+            }
+
+            // 3. Registro de la amistad
+            if (clienteAAfiliar != null) {
+                // Agregamos el cliente a la lista del empleado
+                empleadoActivo.agregarAmigos(clienteAAfiliar);
+                
+                // Cambiamos el atributo booleano del cliente a true
+                clienteAAfiliar.nuevoAmigo();
+                
+                System.out.println("\u001B[32m" + "¡Éxito! " + clienteAAfiliar.getNombre() + 
+                                   " ahora es amigo de " + empleadoActivo.getNombre() + 
+                                   ". Ahora recibirá descuentos en sus compras." + "\u001B[0m");
+            }
+
+        } else {
+            System.out.println("❌ Error de autenticación: Login o contraseña incorrectos, o el usuario no es un empleado.");
+        }
+    }
+    
     
     public static void main(String[] args) {
         Consola consola = new Consola();
@@ -192,7 +424,8 @@ public class Consola {
             System.out.println("3. Cambiar Contraseña");
             System.out.println("4. Ingreso de juegos favoritos");
             System.out.println("5. Comprar Productos");
-            System.out.println("4. Salir");
+            System.out.println("6. Afiliar un Amigo");
+            System.out.println("7. Salir");
             System.out.print("Seleccione una opción: ");
             
             try {
@@ -214,6 +447,15 @@ public class Consola {
                         consola.cambioContraseña();
                         break;
                     case 4:
+                        consola.ingresarJuegoFav();
+                        break;
+                    case 5:
+                        consola.simularCompra();
+                        break;
+                    case 6:
+                        consola.afiliarAmigo();
+                        break;
+                    case 7:
                         System.out.println(" Saliendo del sistema... ¡Hasta luego!");
                         break;
                       

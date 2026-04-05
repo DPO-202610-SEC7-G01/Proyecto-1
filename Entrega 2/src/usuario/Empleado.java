@@ -1,13 +1,13 @@
 package usuario;
 
-import producto.Juego;
+
 import java.util.Calendar;
 import java.util.List;
-
-import cafe.Transaccion;
-
 import java.util.ArrayList;
 
+import cafe.Transaccion;
+import cafe.Cafe;
+import producto.Juego;
 import producto.Platillo;
 import producto.Producto;
 
@@ -15,8 +15,9 @@ public class Empleado extends Usuario {
 	private int puntosFidelidad;
 	private List <Calendar> turno;
 	private List<Cliente> amigos;
-	private List<Platillo> sugerencias; // La referencia debe estar precisamente directa en el café pero no acá
+	// La referencia debe estar precisamente directa en el café pero no acá
     private List<Juego> juegosFavoritos;
+    private Cafe miCafe;
 	
 	//Constructor
     public Empleado(int id, String login, String password, String nombre) {
@@ -85,8 +86,8 @@ public class Empleado extends Usuario {
 	}
 	
 	
-	public void sugerencias(Platillo p){ //Se debe agregar en el café no acá 
-		sugerencias.add(p);
+	public void sugerencias(Platillo p){ 
+		miCafe.agregarSugerencias(p);
 	}
 	
 	
