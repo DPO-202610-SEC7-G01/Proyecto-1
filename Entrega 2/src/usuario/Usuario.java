@@ -5,6 +5,8 @@ public abstract class Usuario {
 	private String login;
 	private String password;
 	private String nombre;
+	
+	//Constructor
 	public Usuario(int id, String login, String password, String nombre) {
 		this.id = id;
 		this.login = login;
@@ -12,6 +14,7 @@ public abstract class Usuario {
 		this.nombre = nombre;
 	}
 	
+	//Getters y Setters
 	public int getId() {
 		return id;
 	}
