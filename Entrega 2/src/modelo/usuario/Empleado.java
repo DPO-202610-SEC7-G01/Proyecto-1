@@ -81,13 +81,17 @@ public class Empleado extends Usuario {
 	    }
 	}
 	
-	public void pedirCambioTurno(Administrador admin, Calendar miFecha, Calendar nuevaFecha, Empleado companero) {
-	    admin.procesarCambioTurno(this, companero, miFecha, nuevaFecha);
+	public boolean pedirCambioTurno(Administrador admin, Calendar miFecha, Calendar nuevaFecha, Empleado companero) {
+	    boolean res =admin.procesarCambioTurno(this, companero, miFecha, nuevaFecha);
+	    return res;
 	}
 	
 	
 	public void sugerencias(Platillo p){ 
 		miCafe.agregarSugerencias(p);
+	}
+	public void agregarTurno(Calendar fecha) {
+		this.turno.add(fecha);
 	}
 	
 	

@@ -14,15 +14,15 @@ public class Administrador extends Usuario {
 	}
 	
 	//Métodos
-	public void procesarCambioTurno(Empleado solicitante, Empleado companero, Calendar fechaS, Calendar fechaC) {
+	public boolean procesarCambioTurno(Empleado solicitante, Empleado companero, Calendar fechaS, Calendar fechaC) {
 	    
 	    // 1. Validaciones de existencia y cargo (Igual que antes)
 	    if (!solicitante.getTurno().contains(fechaS) || !companero.getTurno().contains(fechaC)) {
-	        return;
+	        return false;
 	    }
 
 	    if (!solicitante.getClass().equals(companero.getClass())) {
-	        return;
+	        return false;
 	    }
 
 	    // 2. SIMULACIÓN: Guardamos quiénes están actualmente para poder revertir si falla
@@ -39,9 +39,11 @@ public class Administrador extends Usuario {
 	    if (esAptoS && esAptoC) {
 	        solicitante.cambioDeTurno(fechaS, fechaC);
 	        companero.cambioDeTurno(fechaC, fechaS);
+	        return true;
 	    } else {
 	        this.miCafe.getTurnoEmpleados().put(fechaS, originalS);
 	        this.miCafe.getTurnoEmpleados().put(fechaC, originalC);
+	        return false;
 	    }
 	}
 
