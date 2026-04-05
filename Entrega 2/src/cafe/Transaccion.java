@@ -17,6 +17,8 @@ public class Transaccion {
 	private List<Producto> productos;
 	private Usuario cliente_final;
 	private boolean amigoEmpleado;
+	
+	//Constructor
 	public Transaccion(int id, Calendar fecha, List<Producto> productos, Usuario usuario, boolean amigoEmpleado) {
 		super();
 		this.id = id;
@@ -25,6 +27,8 @@ public class Transaccion {
 		this.cliente_final = usuario;
 		this.amigoEmpleado = amigoEmpleado;
 	}
+	
+	//Getters y Setters
 	public int getId() {
 		return id;
 	}
@@ -43,6 +47,8 @@ public class Transaccion {
 	public List<Producto> getProductos() {
 		return productos;
 	}
+	
+	//Métodos
 	public int calcularTotal() {
 		double total = 0;
 		for (int i = 0; i < this.productos.size(); i++) {
