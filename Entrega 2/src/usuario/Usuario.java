@@ -28,4 +28,7 @@ public abstract class Usuario {
 		return nombre;
 	}
 
+	public void setPassword(String nueva) {
+		this.password=nueva;
+	}
 }
