@@ -4,8 +4,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import producto.Producto;
-import usuario.Cocinero;
-import usuario.Mesero;
+import usuario.Empleado;
 import usuario.Usuario;
 
 public class Transaccion {
@@ -56,7 +55,7 @@ public class Transaccion {
 			total += producto.calcularPrecioFinal();
 		}
 		
-		if ( cliente_final instanceof Cocinero || cliente_final instanceof Mesero) {
+		if ( cliente_final instanceof Empleado) {
 			double descuento  = total * this.DESCUENTO_EMPLEADO;
 			total -= descuento;
 		}
