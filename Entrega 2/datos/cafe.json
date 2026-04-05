@@ -1,0 +1,35 @@
+{
+  "capacidad_total": 50,
+  "admin": {
+    "id": 1,
+    "login": "admin01",
+    "password": "hashed_password",
+    "nombre": "Carlos Perez"
+  },
+  "mesas": [
+    { "id": 1, "sillas": 4, "ocupada": false },
+    { "id": 2, "sillas": 2, "ocupada": true }
+  ],
+  "empleados": [
+    {
+      "tipo": "Cocinero",
+      "id": 101,
+      "nombre": "Elena Gómez",
+      "platillos_conocidos": [101, 102],
+      "bebidas_conocidas": [201]
+    },
+    {
+      "tipo": "Mesero",
+      "id": 102,
+      "nombre": "Juan Soto"
+    }
+  ],
+  "catalogo": {
+    "platillos": [
+      { "id": 101, "nombre": "Sandwich Pavo", "precio": 25000, "alergenos": "Gluten" }
+    ],
+    "bebidas": [
+      { "id": 201, "nombre": "Café", "precio": 12000, "temperatura": "Caliente" }
+    ]
+  }
+}

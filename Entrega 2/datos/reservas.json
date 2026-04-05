@@ -1,0 +1,38 @@
+{
+  "clientes": [
+    {
+      "id": 501,
+      "login": "marta22",
+      "nombre": "Marta Ruiz",
+      "edad": 28,
+      "alergenos": "Nueces",
+      "amigo_empleado": true
+    }
+  ],
+  "reservas": [
+    {
+      "id_mesa": 1,
+      "fecha": "2026-04-05T15:00:00",
+      "clientes_logins": ["marta22"],
+      "id_mesero": 102,
+      "transacciones": [
+        { "id_producto": 201, "cantidad": 1, "hora": "15:30" }
+      ]
+    }
+  ]
+  "historial_transacciones": [
+    {
+      "id": 8821,
+      "fecha": "2026-04-05T14:20:00",
+      "login_cliente": "marta22",
+      "productos_comprados": [
+        { "id_producto": 501, "nombre": "Catan", "precio_venta": 150000, "tipo": "Juego" },
+        { "id_producto": 201, "nombre": "Café Americano", "precio_venta": 12000, "tipo": "Bebida" }
+      ],
+      "subtotal": 162000,
+      "descuento_aplicado": 15000,
+      "total_pagado": 147000,
+      "metodo_pago": "Efectivo"
+    }
+  ]
+}
