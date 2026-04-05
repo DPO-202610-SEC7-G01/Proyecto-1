@@ -1,4 +1,4 @@
-package cafe;
+package modelo;
 
 public class Mesa {
 	

@@ -1,11 +1,11 @@
-package cafe;
+package modelo;
 
 import java.util.Calendar;
 import java.util.List;
 
-import producto.Producto;
-import usuario.Empleado;
-import usuario.Usuario;
+import modelo.producto.Producto;
+import modelo.usuario.Empleado;
+import modelo.usuario.Usuario;
 
 public class Transaccion {
 	private int id;

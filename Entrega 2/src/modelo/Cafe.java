@@ -1,19 +1,19 @@
-package cafe;
+package modelo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import producto.Juego;
-import usuario.Empleado;
-import usuario.Mesero;
-import usuario.Cliente;
-import usuario.Cocinero;
-import usuario.Administrador;
-import producto.Platillo;
-import producto.Bebida;
-import producto.Producto;
+import modelo.producto.Juego;
+import modelo.usuario.Empleado;
+import modelo.usuario.Mesero;
+import modelo.usuario.Cliente;
+import modelo.usuario.Cocinero;
+import modelo.usuario.Administrador;
+import modelo.producto.Platillo;
+import modelo.producto.Bebida;
+import modelo.producto.Producto;
 
 public class Cafe {
 

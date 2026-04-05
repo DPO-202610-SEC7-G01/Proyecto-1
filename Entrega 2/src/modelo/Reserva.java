@@ -1,28 +1,25 @@
-package cafe;
+package modelo;
 
 import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
-import producto.Juego;
-import producto.Producto;
-import producto.Bebida;
-import producto.Platillo;
-
-import java.util.ArrayList;
-import usuario.Cliente;
-import usuario.Mesero;
-import cafe.Cafe;
+import modelo.producto.Juego;
+import modelo.producto.Producto;
+import modelo.producto.Bebida;
+import modelo.usuario.Cliente;
+import modelo.usuario.Mesero;
 
 public class Reserva {
 	private Mesa mesa;
 	private int numPersonas;
 	private Calendar fecha;
-	private double totalFactura;
 	private List<Cliente> clientes;
 	private List<Producto> transaccion;
 	private List<Juego> juegosPrestados; 
 	private Cafe miCafe;
 	private Mesero meseroAsignado;
+	private double totalFactura;
 
 	
 	
@@ -33,6 +30,7 @@ public class Reserva {
 		this.numPersonas = numPersonas;
 		this.fecha = fecha;
 		this.transaccion = new ArrayList<Producto>();
+		this.totalFactura =0.0;
 		
 	}
 	
