@@ -711,6 +711,37 @@ public class Consola {
 		}
 		return;
 	}
+	public void sugerirPlatillo(Scanner lectorMenu) {
+		autenticarEmpleado();
+		System.out.println("Ingrese el nombre del producto: ");
+		String nombre = lectorMenu.nextLine();
+		System.out.println("Ingrese el precio del producto: ");
+		try {
+			int precio = lectorMenu.nextInt();
+			lectorMenu.nextLine();
+			System.out.println("Ingrese los alergenos del producto, si no hay : ");
+			String alergenos= lectorMenu.nextLine();
+			System.out.println("Ingrese el id del producto: ");
+			try {
+				int id = lectorMenu.nextInt();
+				lectorMenu.nextLine();
+				Platillo sugerencia = new Platillo(id, precio, nombre, alergenos);
+				miCafe.agregarSugerencias(sugerencia);
+				System.out.println("Sugerencia agregada exitosamente.");
+				return;
+			} catch (Exception a) {
+				System.out.println(" Error: Por favor ingrese un número válido.");
+				lectorMenu.nextLine();
+				return;
+			}
+	
+		} catch (Exception e) {
+			System.out.println(" Error: Por favor ingrese un número válido.");
+			lectorMenu.nextLine();
+			return;
+		}
+		
+	}
 
 	// Métodos de apoyo para limpiar el código principal
 	private void pedirYServirPlatillo(Reserva r, Mesero mes) {
@@ -810,7 +841,8 @@ public class Consola {
 			System.out.println("8. Hacer solicitudes para la Mesa");
 			System.out.println("9. Pagar Reserva");
 			System.out.println("10. Gestionar turnos");
-			System.out.println("11. Salir");
+			System.out.println("11. Sugerir platillo");
+			System.out.println("12. Salir");
 			System.out.print("Seleccione una opción: ");
 
 			try {
@@ -853,8 +885,9 @@ public class Consola {
 				case 10:
 					consola.gestionarTurno(lectorMenu);
 					break;
-
 				case 11:
+					consola.sugerirPlatillo(lectorMenu);
+				case 12:
 					consola.guardarDatos(); 
 					System.out.println("Saliendo del sistema... ¡Hasta luego!");
 					return;
