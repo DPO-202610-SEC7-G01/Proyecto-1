@@ -1,6 +1,8 @@
 package consola.interfaz;
 
 import java.util.Scanner;
+import persistencia.PersistenciaCafeJson;
+import persistencia.PersistenciaOperacionesJson;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import modelo.producto.Bebida;
 import modelo.producto.Platillo;
 
 public class Consola {
+	private PersistenciaCafeJson persistenciaCafe;
+	private PersistenciaOperacionesJson persistenciaOps;
 	private Cafe miCafe;
 	private Scanner lector;
 	private Random aleatorio;
@@ -32,31 +36,41 @@ public class Consola {
 
 	public Consola() {
 		this.miCafe = new Cafe(50);
-
 		this.lector = new Scanner(System.in);
 		this.aleatorio = new Random();
-		Juego juegoInicial = new Juego(501, // id
-				150000, // precio
-				"Catan", // nombre
-				1995, // anioPublicacion
-				"Devir", // empresaMatriz
-				4, // numJugadores
-				"apto 5 anios", // restriccionEdad
-				"Tablero" // categoria
-		);
+		this.persistenciaCafe = new PersistenciaCafeJson();
+		this.persistenciaOps = new PersistenciaOperacionesJson();
+		
+		cargarDatosBase();
+	}
 
-		Bebida bebidaInicial = new Bebida(201, 12000, "Café Americano", "Caliente", false);
-		Platillo platilloInicial = new Platillo(101, 25000, "Sandwich de Pavo", "Gluten, Lácteos");
-		miCafe.getJuegosVenta().add(juegoInicial);
-		miCafe.getJuegosPrestamo().add(juegoInicial);
-		miCafe.getMenuBebidas().add(bebidaInicial);
-		miCafe.getMenuPlatillos().add(platilloInicial);
-		registrarAdministrador();
-		inicializarMesas();
+	private void cargarDatosBase() {
+		try {
+			System.out.println("Buscando archivos de guardado previos...");
+			// Intentamos cargar la infraestructura y luego las operaciones
+			persistenciaCafe.cargarCafe("cafe.json", miCafe);
+			persistenciaOps.cargarOperaciones("operaciones.json", miCafe);
+			System.out.println("✅ Datos cargados exitosamente. ¡Bienvenido de vuelta!");
+			
+		} catch (Exception e) {
+			System.out.println("⚠️ No se encontraron datos previos o hubo un error. Inicializando local por defecto...");
+			
+			Juego juegoInicial = new Juego(501, 150000, "Catan", 1995, "Devir", 4, "apto 5 anios", "Tablero");
+			Bebida bebidaInicial = new Bebida(201, 12000, "Café Americano", "Caliente", false);
+			Platillo platilloInicial = new Platillo(101, 25000, "Sandwich de Pavo", "Gluten, Lácteos");
+			
+			miCafe.getJuegosVenta().add(juegoInicial);
+			miCafe.getJuegosPrestamo().add(juegoInicial);
+			miCafe.getMenuBebidas().add(bebidaInicial);
+			miCafe.getMenuPlatillos().add(platilloInicial);
+			
+			registrarAdministrador();
+			inicializarMesas();
+		}
 	}
 
 	private void inicializarMesas() {
-		int capacidadRestante = miCafe.getCapacidad(); // Los 50 espacios
+		int capacidadRestante = miCafe.getCapacidad(); 
 		int contadorMesa = 1;
 
 		System.out.println("--- CONFIGURANDO DISTRIBUCIÓN DEL LOCAL ---");
@@ -766,7 +780,16 @@ public class Consola {
 		}
 		return false;
 	}
-
+	public void guardarDatos() {
+		try {
+			System.out.println("\nGuardando la información del día...");
+			persistenciaCafe.salvarCafe("cafe.json", miCafe);
+			persistenciaOps.salvarOperaciones("operaciones.json", miCafe);
+			System.out.println("✅ ¡Información guardada correctamente en formato JSON!");
+		} catch (Exception e) {
+			System.out.println("❌ Ocurrió un error crítico al guardar los archivos: " + e.getMessage());
+		}
+	}
 	public static void main(String[] args) {
 		Consola consola = new Consola();
 		Scanner lectorMenu = new Scanner(System.in);
@@ -830,7 +853,10 @@ public class Consola {
 				case 10:
 					consola.gestionarTurno(lectorMenu);
 					break;
+
 				case 11:
+					consola.guardarDatos(); 
+					System.out.println("Saliendo del sistema... ¡Hasta luego!");
 					return;
 				default:
 					System.out.println("Opción no válida. Intente de nuevo.");

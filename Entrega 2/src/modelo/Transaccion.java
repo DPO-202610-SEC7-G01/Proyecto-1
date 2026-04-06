@@ -28,6 +28,13 @@ public class Transaccion {
 	}
 	
 	//Getters y Setters
+	public Usuario getCliente_final() {
+		return cliente_final;
+	}
+
+	public boolean isAmigoEmpleado() {
+		return amigoEmpleado;
+	}
 	public int getId() {
 		return id;
 	}
