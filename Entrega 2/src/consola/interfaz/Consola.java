@@ -48,8 +48,8 @@ public class Consola {
 		try {
 			System.out.println("Buscando archivos de guardado previos...");
 			// Intentamos cargar la infraestructura y luego las operaciones
-			persistenciaCafe.cargarCafe("cafe.json", miCafe);
-			persistenciaOps.cargarOperaciones("operaciones.json", miCafe);
+			persistenciaCafe.cargarCafe("Entrega 2/datos/cafe.json",miCafe);
+			persistenciaOps.cargarOperaciones("Entrega 2/datos/operaciones.json", miCafe);
 			System.out.println("✅ Datos cargados exitosamente. ¡Bienvenido de vuelta!");
 			
 		} catch (Exception e) {
