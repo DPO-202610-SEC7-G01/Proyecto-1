@@ -5,11 +5,11 @@ package persistencia;
  */
 public class CentralPersistencia
 {
-    // --- Constantes ---
+ 
     public static final String JSON = "JSON";
 
     // --- Métodos Estáticos ---
-    public static IPersistenciaCafe getPersistenciaCafe( String tipoArchivo ) throws Exception // Cambia Exception por tu excepción específica si tienes una
+    public static IPersistenciaCafe getPersistenciaCafe( String tipoArchivo ) throws Exception 
     {
         if ( tipoArchivo.equals( JSON ) )
         {

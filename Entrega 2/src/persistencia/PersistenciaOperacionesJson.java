@@ -88,14 +88,13 @@ public class PersistenciaOperacionesJson implements IPersistenciaOperaciones {
         for (Transaccion trans : cafe.getHistorialTransaccion()) {
             JSONObject jTrans = new JSONObject();
             
-            // Usamos el getter getId() de tu clase
             jTrans.put("id", trans.getId()); 
             jTrans.put("fechaMillis", trans.getFecha().getTimeInMillis());
             
-            // ¡IMPORTANTE! Requiere que agregues public boolean isAmigoEmpleado() en Transaccion
+
             jTrans.put("amigoEmpleado", trans.isAmigoEmpleado()); 
             
-            // ¡IMPORTANTE! Requiere que agregues public Usuario getCliente_final() en Transaccion
+
             if (trans.getCliente_final() != null) {
                 jTrans.put("idUsuario", trans.getCliente_final().getId()); 
             }

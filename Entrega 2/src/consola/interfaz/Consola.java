@@ -53,7 +53,7 @@ public class Consola {
 			System.out.println("✅ Datos cargados exitosamente. ¡Bienvenido de vuelta!");
 			
 		} catch (Exception e) {
-			System.out.println("⚠️ No se encontraron datos previos o hubo un error. Inicializando local por defecto...");
+			System.out.println(" No se encontraron datos previos o hubo un error. Inicializando local por defecto...");
 			
 			Juego juegoInicial = new Juego(501, 150000, "Catan", 1995, "Devir", 4, "apto 5 anios", "Tablero");
 			Bebida bebidaInicial = new Bebida(201, 12000, "Café Americano", "Caliente", false);
@@ -785,9 +785,9 @@ public class Consola {
 			System.out.println("\nGuardando la información del día...");
 			persistenciaCafe.salvarCafe("cafe.json", miCafe);
 			persistenciaOps.salvarOperaciones("operaciones.json", miCafe);
-			System.out.println("✅ ¡Información guardada correctamente en formato JSON!");
+			System.out.println("¡Información guardada correctamente en formato JSON!");
 		} catch (Exception e) {
-			System.out.println("❌ Ocurrió un error crítico al guardar los archivos: " + e.getMessage());
+			System.out.println(" Ocurrió un error crítico al guardar los archivos: " + e.getMessage());
 		}
 	}
 	public static void main(String[] args) {

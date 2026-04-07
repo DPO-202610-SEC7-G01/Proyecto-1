@@ -55,7 +55,7 @@ public class PersistenciaCafeJson implements IPersistenciaCafe {
             JSONObject jMesa = new JSONObject();
             jMesa.put("idMesa", mesa.getId()); 
             jMesa.put("numSillas", mesa.getNumSillas());
-            // Asume que tu clase Mesa tiene isDisponible() como se ve en asignarMesa() de Cafe.java
+
             jMesa.put("ocupada", !mesa.isDisponible()); 
             jMesas.put(jMesa);
         }
@@ -204,7 +204,7 @@ public class PersistenciaCafeJson implements IPersistenciaCafe {
 
                 if (tipo.equals("JuegoDificil")) {
                     String instrucciones = jProd.getString("instrucciones");
-                    // Constructor JuegoDificil: id, precio, nombre, anioPublicacion, empresMatriz, numJugadores, restriccionEdad, categoria, instrucciones
+                    
                     nuevoJuego = new JuegoDificil(id, precio, nombre, anioPublicacion, empresMatriz, numJugadores, restriccionEdad, categoria, instrucciones);
                 } else {
                     // Constructor Juego: id, precio, nombre, anioPublicacion, empresMatriz, numJugadores, restriccionEdad, categoria
@@ -231,7 +231,6 @@ public class PersistenciaCafeJson implements IPersistenciaCafe {
         String nombre = jAdmin.getString("nombre");
         
         // 2. Creamos el Administrador usando el objeto 'cafe' que ya tenemos en memoria
-        // Fíjate que el orden coincide con tu constructor: (id, login, password, nombre, cafe)
         Administrador admin = new Administrador(id, login, password, nombre, cafe);
         
         // 3. Lo vinculamos al café
