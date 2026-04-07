@@ -192,7 +192,7 @@ public class PersistenciaOperacionesJson implements IPersistenciaOperaciones {
                 }
             }
 
-            // Instanciar usando exactamente tu constructor en Transaccion.java
+
             Transaccion transaccion = new Transaccion(id, fecha, productosTransaccion, usuario, amigoEmpleado);
             
             cafe.getHistorialTransaccion().add(transaccion);

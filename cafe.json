@@ -2,72 +2,47 @@
     "mesas": [
         {
             "idMesa": 1,
-            "ocupada": true,
-            "numSillas": 4
-        },
-        {
-            "idMesa": 2,
-            "ocupada": false,
-            "numSillas": 0
-        },
-        {
-            "idMesa": 3,
-            "ocupada": false,
-            "numSillas": 4
-        },
-        {
-            "idMesa": 4,
-            "ocupada": false,
-            "numSillas": 7
-        },
-        {
-            "idMesa": 5,
-            "ocupada": false,
-            "numSillas": 0
-        },
-        {
-            "idMesa": 6,
-            "ocupada": false,
-            "numSillas": 12
-        },
-        {
-            "idMesa": 7,
             "ocupada": false,
             "numSillas": 6
         },
         {
-            "idMesa": 8,
+            "idMesa": 2,
             "ocupada": false,
-            "numSillas": 13
+            "numSillas": 8
         },
         {
-            "idMesa": 9,
+            "idMesa": 3,
             "ocupada": false,
-            "numSillas": 4
+            "numSillas": 3
+        },
+        {
+            "idMesa": 4,
+            "ocupada": false,
+            "numSillas": 14
+        },
+        {
+            "idMesa": 5,
+            "ocupada": false,
+            "numSillas": 8
+        },
+        {
+            "idMesa": 6,
+            "ocupada": false,
+            "numSillas": 0
+        },
+        {
+            "idMesa": 7,
+            "ocupada": false,
+            "numSillas": 11
         }
     ],
     "administrador": {
-        "clave": "lalal",
-        "id": 475,
-        "login": "juan475",
-        "nombre": "juan"
+        "clave": "sdsad",
+        "id": 751,
+        "login": "dsfsdfs751",
+        "nombre": "dsfsdfs"
     },
-    "empleados": [
-        {
-            "clave": "carlos",
-            "tipo": "Cocinero",
-            "id": 110,
-            "login": "carlos110",
-            "nombre": "carlos"
-        },
-        {
-            "clave": "paco",
-            "tipo": "Mesero",
-            "id": 741,
-            "login": "luis741",
-            "nombre": "luis"
-        }
-    ],
+    "empleados": [],
     "productos": [
         {
             "precio": 25000,
