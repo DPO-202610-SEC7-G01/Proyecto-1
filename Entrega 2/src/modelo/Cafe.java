@@ -11,6 +11,7 @@ import modelo.usuario.Mesero;
 import modelo.usuario.Cliente;
 import modelo.usuario.Cocinero;
 import modelo.usuario.Administrador;
+import modelo.usuario.Usuario;
 import modelo.producto.Platillo;
 import modelo.producto.Bebida;
 import modelo.producto.Producto;
@@ -25,7 +26,7 @@ public class Cafe {
 	private ArrayList<Reserva> reservasPrevias;
 	private ArrayList<Juego> juegosPrestamo;
 	private ArrayList<Juego> juegosVenta;
-	private HashMap<Calendar, HashMap<Integer, Reserva>> historialUsoJuegos;
+	private HashMap<Calendar, HashMap<Usuario,Juego>> historialUsoJuegos;
 	private HashMap<Integer, ArrayList<Juego>> juegosCliente;
 	private ArrayList<Transaccion> historialTransaccion;
 	private ArrayList<Platillo> menuPlatillos;
@@ -51,7 +52,7 @@ public class Cafe {
 		this.turnoEmpleados = new HashMap<Calendar, Empleado>();
 		this.historialTransaccion = new ArrayList<Transaccion>();
 		this.juegosCliente = new HashMap<Integer, ArrayList<Juego>>();
-		this.historialUsoJuegos = new HashMap<Calendar, HashMap<Integer, Reserva>>();
+		this.historialUsoJuegos = new HashMap<Calendar, HashMap<Usuario, Juego>>();
 		
 		
 	}
@@ -86,9 +87,9 @@ public class Cafe {
 		return reservasPrevias;
 	}
 
-	public HashMap<Calendar, HashMap<Integer, Reserva>> getHistorialUsoJuegos() {
-		return historialUsoJuegos;
-	}
+	public HashMap<Calendar, HashMap<Usuario, Juego>> getHistorialUsoJuegos() {
+		return historialUsoJuegos; 
+	}  
 
 	public ArrayList<Transaccion> getHistorialTransaccion() {
 		return historialTransaccion;
@@ -199,6 +200,7 @@ public class Cafe {
 	public void sugerirPlatillo(Platillo platillo) {
 		this.sugerenciasPendientes.add(platillo);
 	}
+	
 	public boolean reservarJuego(Juego juego, Reserva r) {
 	    if (!juegosPrestamo.contains(juego)) {
 	        return false;
@@ -208,8 +210,11 @@ public class Cafe {
 	    int numPersonas = r.getNumPersonas();
 	    List<Cliente> integrantes = r.getClientes();
 	    
-	    if (integrantes.isEmpty()) return false;
-	    int idPrincipal = integrantes.get(0).getId();
+	    if (integrantes == null || integrantes.isEmpty()) return false;
+	    
+	    // Identificamos al cliente que lidera la reserva (el primero de la lista)
+	    Cliente clientePrincipal = integrantes.get(0);
+	    int idPrincipal = clientePrincipal.getId();
 
 	    int edadMinimaJuego = extraerEdadMinima(juego.getRestriccionEdad());
 	    for (Cliente c : integrantes) {
@@ -222,23 +227,25 @@ public class Cafe {
 	        return false;
 	    }
 
-	    historialUsoJuegos.putIfAbsent(fecha, new HashMap<Integer, Reserva>());
+	    historialUsoJuegos.putIfAbsent(fecha, new HashMap<Usuario, Juego>());
 	    juegosCliente.putIfAbsent(idPrincipal, new ArrayList<Juego>());
 
-	    HashMap<Integer, Reserva> juegosReservadosFecha = historialUsoJuegos.get(fecha);
-	    ArrayList<Juego> juegosDelCliente = juegosCliente.get(idPrincipal);
+	    HashMap<Usuario, Juego> registrosFecha = historialUsoJuegos.get(fecha);
+	    ArrayList<Juego> listaJuegosDelCliente = juegosCliente.get(idPrincipal);
 
-
-	    if (juegosReservadosFecha.containsKey(juego.getId())) {
+	   
+	    if (registrosFecha.containsValue(juego)) {
 	        return false;
 	    }
 
-	    if (juegosDelCliente.size() >= 2) {
+	    if (listaJuegosDelCliente.size() >= 2) {
 	        return false;
 	    }
 
-	    juegosDelCliente.add(juego);
-	    juegosReservadosFecha.put(juego.getId(), r);
+	    
+	    listaJuegosDelCliente.add(juego);
+	    registrosFecha.put(clientePrincipal, juego);
+	    juego.setPrestado(true);
 	    
 	    return true;
 	}

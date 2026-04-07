@@ -60,7 +60,7 @@ public class Empleado extends Usuario {
         return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) &&
                c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
     }
-}
+
 
 	public void sumarPuntosFidelidad(int puntosFidelidad) {
 		this.puntosFidelidad += puntosFidelidad;

@@ -1,8 +1,10 @@
 package modelo.usuario;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import modelo.Cafe;
+import modelo.producto.Juego;
 
 public class Administrador extends Usuario {
 	private Cafe miCafe;
@@ -14,26 +16,27 @@ public class Administrador extends Usuario {
 	}
 	
 	//Métodos
-    public boolean gestionarPrestamo(Empleado empleado, Juego juego, Calendar fecha) {
-       for (Reserva r : miCafe.getReservasPrevias()) {
-            if (r.getJuego().equals(juego) && esMismaFecha(r.getFecha(), fecha)) {
-                return false; 
-            }
-        }
+	public boolean gestionarPrestamo(Usuario usuario, Juego juego, Calendar fecha) {
+	    HashMap<Calendar, HashMap<Usuario, Juego>> historial = miCafe.getHistorialUsoJuegos();
 
-        juego.setPrestado(true);
-        miCafe.getHistorialUsoJuegos().putIfAbsent(fecha, new HashMap<>());
-        
-        Reserva nuevoRegistro = new Reserva(empleado, juego, fecha);
-        miCafe.getHistorialUsoJuegos().get(fecha).put(juego.getId(), nuevoRegistro);
+	    if (historial.containsKey(fecha)) {
+	        HashMap<Usuario, Juego> prestamosDelDia = historial.get(fecha);
+	        
+	        if (prestamosDelDia.containsValue(juego)) {
+	            return false; 
+	        }
+	    }
 
-        return true;
-    }
+	    juego.setPrestado(true);
+	    historial.putIfAbsent(fecha, new HashMap<>());
+	    historial.get(fecha).put(usuario, juego);
 
-    private boolean esMismaFecha(Calendar c1, Calendar c2) {
-        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) &&
-               c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
-    }
+	    return true;
+	}
+
+
+
+  
 
 	public boolean procesarCambioTurno(Empleado solicitante, Empleado companero, Calendar fechaS, Calendar fechaC) {
 	    

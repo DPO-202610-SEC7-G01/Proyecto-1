@@ -819,7 +819,7 @@ public class Consola {
     if (empleadoActivo == null) return;
     Calendar hoy = Calendar.getInstance();
 
-    // 3. Mostrar juegos disponibles en el café
+    //  Mostrar juegos disponibles en el café
     List<Juego> juegosParaPrestamo = miCafe.getJuegosPrestamo();
     if (juegosParaPrestamo.isEmpty()) {
         System.out.println("❌ No hay juegos registrados para préstamo en el sistema.");
@@ -943,7 +943,7 @@ public class Consola {
 					consola.sugerirPlatillo(lectorMenu);
 					break;
 				case 12:
-					consola.solicitarJuego(lectorMenu);
+					consola.solicitarJuego();
 					break;
 				case 13:
 					consola.guardarDatos(); 
