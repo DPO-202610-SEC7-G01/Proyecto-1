@@ -41,44 +41,25 @@ public class Empleado extends Usuario {
 		return juegosFavoritos;
 	}
 
-	//Métodos 
-	public boolean aptoPrestamo(Juego juego, Calendar fechaConsulta) {
-    boolean estaEnTurno = false;
-    for (Calendar fechaTurno : this.turno) {
-        if (esMismaFecha(fechaTurno, fechaConsulta)) {
-            estaEnTurno = true;
-            break;
+    public boolean aptoPrestamo(Administrador admin, Juego juego, Calendar fechaConsulta) {
+        boolean estaEnTurno = false;
+        for (Calendar fechaTurno : this.turno) {
+            if (esMismaFecha(fechaTurno, fechaConsulta)) {
+                estaEnTurno = true;
+                break;
+            }
         }
-    }
 
-    if (!estaEnTurno) {
-        return true; 
-    }
-
-    for (Reserva reserva : miCafe.getReservasPrevias()) {
-        if (reserva.getJuego().equals(juego) && esMismaFecha(reserva.getFecha(), fechaConsulta)) {
-            return false; 
+        if (!estaEnTurno) {
+            return true; 
         }
+        return admin.gestionarPrestamo(this, juego, fechaConsulta);
     }
-    juego.setPrestado(true);
 
-    // Registro en el historial del café
-    // Estructura: HashMap<Calendar, HashMap<Integer, Reserva>>
-    miCafe.getHistorialUsoJuegos().putIfAbsent(fechaConsulta, new HashMap<>());
-    
-    int idJuego = juego.getId(); 
-    Reserva nuevoRegistro = new Reserva(this, juego, fechaConsulta);
-    
-    miCafe.getHistorialUsoJuegos().get(fechaConsulta).put(idJuego, nuevoRegistro);
-    return true;
-}
-
-/**
- * Método auxiliar para comparar solo Día/Mes/Año y evitar fallos por milisegundos
- */
-private boolean esMismaFecha(Calendar c1, Calendar c2) {
-    return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) &&
-           c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
+    private boolean esMismaFecha(Calendar c1, Calendar c2) {
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) &&
+               c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
+    }
 }
 
 	public void sumarPuntosFidelidad(int puntosFidelidad) {

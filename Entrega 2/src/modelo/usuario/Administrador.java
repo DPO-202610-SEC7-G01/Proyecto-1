@@ -14,6 +14,27 @@ public class Administrador extends Usuario {
 	}
 	
 	//Métodos
+    public boolean gestionarPrestamo(Empleado empleado, Juego juego, Calendar fecha) {
+       for (Reserva r : miCafe.getReservasPrevias()) {
+            if (r.getJuego().equals(juego) && esMismaFecha(r.getFecha(), fecha)) {
+                return false; 
+            }
+        }
+
+        juego.setPrestado(true);
+        miCafe.getHistorialUsoJuegos().putIfAbsent(fecha, new HashMap<>());
+        
+        Reserva nuevoRegistro = new Reserva(empleado, juego, fecha);
+        miCafe.getHistorialUsoJuegos().get(fecha).put(juego.getId(), nuevoRegistro);
+
+        return true;
+    }
+
+    private boolean esMismaFecha(Calendar c1, Calendar c2) {
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) &&
+               c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
+    }
+
 	public boolean procesarCambioTurno(Empleado solicitante, Empleado companero, Calendar fechaS, Calendar fechaC) {
 	    
 	    // 1. Validaciones de existencia y cargo (Igual que antes)
@@ -47,5 +68,5 @@ public class Administrador extends Usuario {
 	    }
 	}
 
-	
-}
+}	
+

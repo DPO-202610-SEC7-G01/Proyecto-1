@@ -811,6 +811,59 @@ public class Consola {
 		}
 		return false;
 	}
+
+
+	public void solicitarJuego() {
+    System.out.println("\n--- PRÉSTAMO DE JUEGOS ---");
+    Empleado empleadoActivo = autenticarEmpleado();
+    if (empleadoActivo == null) return;
+    Calendar hoy = Calendar.getInstance();
+
+    // 3. Mostrar juegos disponibles en el café
+    List<Juego> juegosParaPrestamo = miCafe.getJuegosPrestamo();
+    if (juegosParaPrestamo.isEmpty()) {
+        System.out.println("❌ No hay juegos registrados para préstamo en el sistema.");
+        return;
+    }
+
+    System.out.println("Seleccione el juego a prestar:");
+    for (int i = 0; i < juegosParaPrestamo.size(); i++) {
+        Juego j = juegosParaPrestamo.get(i);
+        String estado = j.isPrestado() ? "[PRESTADO]" : "[DISPONIBLE]";
+        System.out.println(i + ". " + j.getNombre() + " " + estado);
+    }
+
+    System.out.print("Ingrese el número del juego: ");
+    try {
+        int indice = Integer.parseInt(lector.nextLine());
+        
+        if (indice >= 0 && indice < juegosParaPrestamo.size()) {
+            Juego juegoElegido = juegosParaPrestamo.get(indice);
+
+            // Verificar si el juego ya está prestado físicamente
+            if (juegoElegido.isPrestado()) {
+                System.out.println(" Error: Este juego ya se encuentra en uso.");
+                return;
+            }
+
+            boolean exito = empleadoActivo.aptoPrestamo(miCafe.getAdmin(), juegoElegido, hoy);
+
+            if (exito) {
+                System.out.println("\n¡Préstamo autorizado!");
+                System.out.println("El juego '" + juegoElegido.getNombre() + "' ha sido entregado.");
+                System.out.println("Registro creado en el historial del café por " + empleadoActivo.getNombre());
+            } else {
+                System.out.println("\n El préstamo fue denegado.");
+                System.out.println("Razones posibles: Estás en tu turno de trabajo y hay gente o el juego tiene una reserva previa.");
+            }
+
+        } else {
+            System.out.println(" Selección inválida.");
+        }
+    } catch (NumberFormatException e) {
+        System.out.println(" Error: Ingrese un número válido.");
+    }
+}
 	public void guardarDatos() {
 		try {
 			System.out.println("\nGuardando la información del día...");
@@ -842,7 +895,8 @@ public class Consola {
 			System.out.println("9. Pagar Reserva");
 			System.out.println("10. Gestionar turnos");
 			System.out.println("11. Sugerir platillo");
-			System.out.println("12. Salir");
+			System.out.println("12. Solicitar prestamo");
+			System.out.println("13. Salir");
 			System.out.print("Seleccione una opción: ");
 
 			try {
@@ -887,7 +941,11 @@ public class Consola {
 					break;
 				case 11:
 					consola.sugerirPlatillo(lectorMenu);
+					break;
 				case 12:
+					consola.solicitarJuego(lectorMenu);
+					break;
+				case 13:
 					consola.guardarDatos(); 
 					System.out.println("Saliendo del sistema... ¡Hasta luego!");
 					return;
