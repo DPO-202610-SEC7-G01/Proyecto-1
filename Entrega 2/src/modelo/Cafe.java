@@ -24,8 +24,8 @@ public class Cafe {
 	private ArrayList<Cliente> clientes;
 	private ArrayList<Empleado> empleados;
 	private ArrayList<Reserva> reservasPrevias;
-	private ArrayList<Juego> juegosPrestamo;
-	private ArrayList<Juego> juegosVenta;
+	public ArrayList<Juego> juegosPrestamo;
+	public ArrayList<Juego> juegosVenta;
 	private HashMap<Calendar, HashMap<Usuario,Juego>> historialUsoJuegos;
 	private HashMap<Integer, ArrayList<Juego>> juegosCliente;
 	private ArrayList<Transaccion> historialTransaccion;

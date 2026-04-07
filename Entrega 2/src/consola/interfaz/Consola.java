@@ -22,6 +22,7 @@ import modelo.usuario.Usuario;
 import modelo.usuario.Administrador;
 
 import modelo.producto.Juego;
+import modelo.producto.JuegoDificil;
 import modelo.producto.Producto;
 import modelo.producto.Bebida;
 import modelo.producto.Platillo;
@@ -864,6 +865,66 @@ public class Consola {
         System.out.println(" Error: Ingrese un número válido.");
     }
 }
+	
+
+	public void gestionarJuego() {
+	    Scanner sc = new Scanner(System.in);
+
+	    // 1. Autenticación del Administrador
+	    System.out.println("--- Acceso Administrativo ---");
+	    System.out.print("Login: ");
+	    String loginIngresado = sc.nextLine();
+	    sc.nextLine(); // Limpiar buffer
+	    System.out.print("Contraseña: ");
+	    String passwordIngresada = sc.nextLine();
+
+	    // Validamos con el objeto admin del Café
+	    if (miCafe.getAdmin().getLogin().equals(loginIngresado) && miCafe.getAdmin().getPassword().equals(passwordIngresada)) {
+	        System.out.println("\nLogin exitoso. Registro de nuevo juego:");
+
+	        System.out.print("ID: "); int id = sc.nextInt();
+	        System.out.print("Precio: "); int precio = sc.nextInt();
+	        sc.nextLine();
+	        System.out.print("Nombre: "); String nombre = sc.nextLine();
+	        System.out.print("Año: "); int anio = sc.nextInt();
+	        sc.nextLine();
+	        System.out.print("Empresa Matriz: "); String empresa = sc.nextLine();
+	        System.out.print("Num. Jugadores: "); int numJug = sc.nextInt();
+	        sc.nextLine();
+	        System.out.print("Restricción Edad: "); String edad = sc.nextLine();
+	        System.out.print("Categoría: "); String cat = sc.nextLine();
+
+	        System.out.print("¿Es un juego difícil? (si/no): ");
+	        String esDificil = sc.nextLine().toLowerCase();
+
+	        Juego nuevoJuego;
+	        if (esDificil.equals("si")) {
+	            System.out.print("Agg Instrucciones ");
+	            String instrucciones = sc.nextLine();
+	            sc.nextLine();
+	            nuevoJuego = new JuegoDificil(id, precio, nombre, anio, empresa, numJug, edad, cat,instrucciones);
+	        } else {
+	            nuevoJuego = new Juego(id, precio, nombre, anio, empresa, numJug, edad, cat);
+	        }
+
+	        System.out.print("¿Tipo de destino? (1. Préstamo / 2. Venta): ");
+	        int tipo = sc.nextInt();
+
+	        if (tipo == 1) {
+	            miCafe.juegosPrestamo.add(nuevoJuego);
+	            System.out.println("Agregado a la lista de PRÉSTAMO.");
+	        } else if (tipo == 2) {
+	            miCafe.juegosVenta.add(nuevoJuego);
+	            System.out.println("Agregado a la lista de VENTA.");
+	        } else {
+	            System.out.println("Opción inválida. El juego no fue guardado.");
+	        }
+
+	    } else {
+	        System.out.println("Error: Credenciales no válidas.");
+	    }
+	}
+	
 	public void guardarDatos() {
 		try {
 			System.out.println("\nGuardando la información del día...");
@@ -946,6 +1007,9 @@ public class Consola {
 					consola.solicitarJuego();
 					break;
 				case 13:
+					consola.gestionarJuego();
+					break;
+				case 14:
 					consola.guardarDatos(); 
 					System.out.println("Saliendo del sistema... ¡Hasta luego!");
 					return;
