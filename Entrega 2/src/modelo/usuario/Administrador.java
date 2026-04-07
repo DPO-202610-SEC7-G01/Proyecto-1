@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import modelo.Cafe;
+import modelo.Transaccion;
+import modelo.producto.*;
 import modelo.producto.Juego;
 import modelo.producto.Platillo;
 
@@ -95,6 +97,50 @@ public class Administrador extends Usuario {
 
 	public void excluirSugerencia(Platillo platillo) {
 		miCafe.getSugerenciasPendientes().remove(platillo);
+	}
+	
+	public String verFinanzas(Calendar fechaInicial, Calendar fechaFinal) {
+	    StringBuilder reporte = new StringBuilder();
+	    ArrayList<Transaccion> historial = miCafe.getHistorialTransaccion();
+
+	    reporte.append("--------------------------------------------------------------------------------\n");
+	    reporte.append(String.format("%-15s | %-12s | %-10s | %-10s | %-10s\n", 
+	                  "PRODUCTOS", "GRANULARIDAD", "P. BASE", "IMPUESTOS", "TOTAL FINAL"));
+	    reporte.append("--------------------------------------------------------------------------------\n");
+
+	    double granTotal = 0;
+
+	    for (Transaccion t : historial) {
+	        if ((t.getFecha().after(fechaInicial) || t.getFecha().equals(fechaInicial)) && 
+	            (t.getFecha().before(fechaFinal) || t.getFecha().equals(fechaFinal))) {
+
+	            Calendar f = t.getFecha();
+	            String infoFecha = String.format("D:%d/S:%d/M:%d", 
+	                                f.get(Calendar.DAY_OF_MONTH), 
+	                                f.get(Calendar.WEEK_OF_YEAR), 
+	                                f.get(Calendar.MONTH) + 1);
+
+	            for (Producto p : t.getProductos()) {
+	                double precioBase = p.getPrecio();
+	                double impuesto = precioBase * p.getTasaImpuesto();
+	                double precioFinalConImpuesto = p.calcularPrecioFinal();
+
+	                reporte.append(String.format("%-15s | %-12s | %-10.2f | %-10.2f | %-10.2f\n",
+	                        p.getNombre(), 
+	                        infoFecha, 
+	                        precioBase, 
+	                        impuesto, 
+	                        precioFinalConImpuesto));
+	            }
+
+	            granTotal += t.calcularTotal();
+	        }
+	    }
+
+	    reporte.append("--------------------------------------------------------------------------------\n");
+	    reporte.append(String.format("TOTAL NETO EN PERIODO (Con descuentos y propinas): $%.2f\n", granTotal));
+	    
+	    return reporte.toString();
 	}
 }	
 

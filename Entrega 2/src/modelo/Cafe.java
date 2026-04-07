@@ -119,6 +119,7 @@ public class Cafe {
 		return sugerenciasPendientes;
 	}
 	
+	
 	// Métodos
 	public void cambiarAdmin(Administrador adminNuevo) {
 		admin= adminNuevo;

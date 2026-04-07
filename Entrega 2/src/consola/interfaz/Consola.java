@@ -3,6 +3,9 @@ package consola.interfaz;
 import java.util.Scanner;
 import persistencia.PersistenciaCafeJson;
 import persistencia.PersistenciaOperacionesJson;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -1111,6 +1114,56 @@ public class Consola {
 	    }
 	}
 	
+	
+
+	public void verFinanzas() {
+	    // 1. Reutilizamos la validación de seguridad
+	    if (!validarAdmin()) {
+	        return; 
+	    }
+
+	    Scanner sc = new Scanner(System.in);
+	    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	    
+	    System.out.println("\n--- Reporte Financiero de Transacciones ---");
+	    
+	    try {
+	        // 2. Pedir y parsear la Fecha Inicial
+	        System.out.print("Ingrese fecha inicial (dd/mm/aaaa): ");
+	        String inicioStr = sc.nextLine();
+	        Calendar fecha1 = Calendar.getInstance();
+	        fecha1.setTime(sdf.parse(inicioStr));
+	        // Ajustamos a inicio del día (00:00:00)
+	        fecha1.set(Calendar.HOUR_OF_DAY, 0);
+	        fecha1.set(Calendar.MINUTE, 0);
+
+	        // 3. Pedir y parsear la Fecha Final
+	        System.out.print("Ingrese fecha final (dd/mm/aaaa): ");
+	        String finStr = sc.nextLine();
+	        Calendar fecha2 = Calendar.getInstance();
+	        fecha2.setTime(sdf.parse(finStr));
+	        // Ajustamos a fin del día (23:59:59)
+	        fecha2.set(Calendar.HOUR_OF_DAY, 23);
+	        fecha2.set(Calendar.MINUTE, 59);
+
+	        // 4. Validar orden de fechas
+	        if (fecha1.after(fecha2)) {
+	            System.out.println("Error: La fecha inicial no puede ser posterior a la final.");
+	            return;
+	        }
+
+	        // 5. Llamar al método del administrador y mostrar el reporte
+	        System.out.println("\nGenerando reporte...");
+	        String reporte = miCafe.getAdmin().verFinanzas(fecha1, fecha2);
+	        
+	        System.out.println(reporte);
+
+	    } catch (ParseException e) {
+	        System.out.println("Error: Formato de fecha inválido. Use dd/mm/aaaa (ej: 07/04/2026).");
+	    }
+	}
+	
+	
 	public void guardarDatos() {
 		try {
 			System.out.println("\nGuardando la información del día...");
@@ -1143,8 +1196,11 @@ public class Consola {
 			System.out.println("10. Gestionar turnos");
 			System.out.println("11. Sugerir platillo");
 			System.out.println("12. Solicitar prestamo");
-			System.out.println("13. Terminar Reserva");
-			System.out.println("14. Salir");
+			System.out.println("13. Gestionar Juegos");
+			System.out.println("14. Terminar Reserva");
+			System.out.println("15. Aceptar Platillos");
+			System.out.println("16. Ver  Finanzas");
+			System.out.println("17. Salir");
 			System.out.print("Seleccione una opción: ");
 
 			try {
@@ -1203,6 +1259,9 @@ public class Consola {
 					consola.aceptarPlatillo();
 					break;
 				case 16:
+					consola.verFinanzas();
+					break;
+				case 17:
 					consola.guardarDatos(); 
 					System.out.println("Saliendo del sistema... ¡Hasta luego!");
 					return;
