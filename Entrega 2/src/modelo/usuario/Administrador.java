@@ -1,5 +1,6 @@
 package modelo.usuario;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -16,6 +17,21 @@ public class Administrador extends Usuario {
 	}
 	
 	//Métodos
+	public void moverJuego(Juego juego) {
+	    ArrayList<Juego> listaVenta = miCafe.getJuegosVenta();
+	    ArrayList<Juego> listaPrestamo = miCafe.getJuegosPrestamo();
+	    if (listaVenta.contains(juego)) {
+	        
+	        listaVenta.remove(juego);
+	        listaPrestamo.add(juego);
+	        juego.setPrestado(false); 
+	        
+	        System.out.println("El juego '" + juego.getNombre() + "' ha sido movido de Venta a Préstamo.");
+	    } else {
+	        System.out.println("Error: El juego no se encuentra en la lista de ventas.");
+	    }
+	}
+	
 	public boolean gestionarPrestamo(Usuario usuario, Juego juego, Calendar fecha) {
 	    HashMap<Calendar, HashMap<Usuario, Juego>> historial = miCafe.getHistorialUsoJuegos();
 

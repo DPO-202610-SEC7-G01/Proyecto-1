@@ -866,8 +866,100 @@ public class Consola {
     }
 }
 	
-
 	public void gestionarJuego() {
+	    Scanner sc = new Scanner(System.in);
+
+	    // 1. Autenticación del Administrador
+	    System.out.println("--- Panel de Control de Inventario ---");
+	    System.out.print("Login: ");
+	    String loginIngresado = sc.nextLine();
+	    System.out.print("Contraseña: ");
+	    String passwordIngresada = sc.nextLine();
+
+	    if (miCafe.getAdmin().getLogin().equals(loginIngresado) && 
+	        miCafe.getAdmin().getPassword().equals(passwordIngresada)) {
+	        
+	        System.out.println("\n¿Qué desea hacer?");
+	        System.out.println("1. Crear nuevo juego");
+	        System.out.println("2. Modificar parámetros de un juego");
+	        System.out.println("3. Mover juego de Venta a Préstamo");
+	        System.out.print("Seleccione una opción: ");
+	        int opcionPrincipal = sc.nextInt();
+	        sc.nextLine(); // Limpiar buffer
+
+	        switch (opcionPrincipal) {
+	            case 1:
+	                registrarNuevoJuego(); // Lógica de creación (la que ya tenías)
+	                break;
+
+	            case 2:
+	                modificarJuego(sc);
+	                break;
+
+	            case 3:
+	                moverInventario(sc);
+	                break;
+
+	            default:
+	                System.out.println("Opción no válida.");
+	                break;
+	        }
+	    } else {
+	        System.out.println("Error: Credenciales no válidas.");
+	    }
+	}
+
+	// --- MÉTODOS DE APOYO PARA MANTENER EL CÓDIGO LIMPIO ---
+
+	private void modificarJuego(Scanner sc) {
+	    System.out.print("Ingrese el ID del juego a modificar: ");
+	    int idBusqueda = sc.nextInt();
+	    sc.nextLine();
+
+	    // Buscamos en ambas listas
+	    Juego juegoAEditar = buscarJuegoPorId(idBusqueda);
+
+	    if (juegoAEditar != null) {
+	        System.out.println("Modificando: " + juegoAEditar.getNombre());
+	        System.out.print("Nuevo Precio (actual: " + juegoAEditar.getPrecio() + "): ");
+	        juegoAEditar.setPrecio(sc.nextInt());
+	        sc.nextLine();
+	        System.out.print("Nueva Categoría (actual: " + juegoAEditar.getCategoria() + "): ");
+	        juegoAEditar.setCategoria(sc.nextLine());
+	        System.out.println("Parámetros actualizados con éxito.");
+	    } else {
+	        System.out.println("Juego no encontrado.");
+	    }
+	}
+
+	private void moverInventario(Scanner sc) {
+	    System.out.print("Ingrese el ID del juego para mover de VENTA a PRÉSTAMO: ");
+	    int idMover = sc.nextInt();
+	    sc.nextLine();
+
+	    Juego juegoAMover = null;
+	    for (Juego j : miCafe.getJuegosVenta()) {
+	        if (j.getId() == idMover) {
+	            juegoAMover = j;
+	            break;
+	        }
+	    }
+
+	    if (juegoAMover != null) {
+	        miCafe.getAdmin().moverJuego(juegoAMover); // Llamamos al método que implementamos antes
+	    } else {
+	        System.out.println("El juego no está en la lista de ventas.");
+	    }
+	}
+
+	private Juego buscarJuegoPorId(int id) {
+	    for (Juego j : miCafe.getJuegosPrestamo()) if (j.getId() == id) return j;
+	    for (Juego j : miCafe.getJuegosVenta()) if (j.getId() == id) return j;
+	    return null;
+	}
+	
+
+	public void registrarNuevoJuego() {
 	    Scanner sc = new Scanner(System.in);
 
 	    // 1. Autenticación del Administrador
@@ -925,6 +1017,60 @@ public class Consola {
 	    }
 	}
 	
+
+	public void terminarReserva() {
+	    Scanner sc = new Scanner(System.in);
+	    System.out.println("--- Finalizar Reserva y Generar Factura ---");
+	    System.out.print("Ingrese el número de la mesa: ");
+	    int numMesa = sc.nextInt();
+
+	    // 1. Buscar la reserva activa
+	    Reserva reservaActiva = null;
+	    for (Reserva r : miCafe.getReservasPrevias()) {
+	        if (r.getMesa() != null && r.getMesa().getId() == numMesa) {
+	            reservaActiva = r;
+	            break;
+	        }
+	    }
+
+	    if (reservaActiva != null) {
+	        // 2. Liberar juegos y mesa internamente
+	        reservaActiva.finalizarReserva();
+
+	        // 3. Preparar datos para la Transacción (Factura)
+	        int nuevoId = miCafe.getHistorialTransaccion().size() + 1;
+	        Calendar fechaActual = Calendar.getInstance();
+	        List<Producto> productosConsumidos = reservaActiva.getFactura();
+	        
+	        // El cliente principal es el primero de la lista de la reserva
+	        Usuario clientePrincipal = reservaActiva.getClientes().get(0);
+
+	        // 4. Preguntar por beneficio de amigo de empleado
+	        System.out.print("¿El cliente es amigo de un empleado? (1. Sí / 2. No): ");
+	        boolean esAmigo = (sc.nextInt() == 1);
+
+	        // 5. Crear e instanciar la Transacción usando tu constructor
+	        Transaccion nuevaFactura = new Transaccion(
+	            nuevoId, 
+	            fechaActual, 
+	            productosConsumidos, 
+	            clientePrincipal, 
+	            esAmigo
+	        );
+
+	        // 6. Guardar en el historial del Café y limpiar el sistema
+	        miCafe.getHistorialTransaccion().add(nuevaFactura);
+	        miCafe.getReservasPrevias().remove(reservaActiva);
+
+	        System.out.println("\nFactura #" + nuevoId + " generada con éxito.");
+	        System.out.println("Total procesado: $" + reservaActiva.getTotalFactura());
+	        System.out.println("La mesa " + numMesa + " ahora está disponible.");
+
+	    } else {
+	        System.out.println("Error: No se encontró una reserva para la mesa " + numMesa);
+	    }
+	}
+	
 	public void guardarDatos() {
 		try {
 			System.out.println("\nGuardando la información del día...");
@@ -957,7 +1103,8 @@ public class Consola {
 			System.out.println("10. Gestionar turnos");
 			System.out.println("11. Sugerir platillo");
 			System.out.println("12. Solicitar prestamo");
-			System.out.println("13. Salir");
+			System.out.println("13. Terminar Reserva");
+			System.out.println("14. Salir");
 			System.out.print("Seleccione una opción: ");
 
 			try {
@@ -1010,6 +1157,9 @@ public class Consola {
 					consola.gestionarJuego();
 					break;
 				case 14:
+					consola.terminarReserva();
+					break;
+				case 15:
 					consola.guardarDatos(); 
 					System.out.println("Saliendo del sistema... ¡Hasta luego!");
 					return;

@@ -7,6 +7,7 @@ import java.util.List;
 import modelo.producto.Juego;
 import modelo.producto.Producto;
 import modelo.producto.Bebida;
+import modelo.producto.Platillo;
 import modelo.usuario.Cliente;
 import modelo.usuario.Mesero;
 
@@ -112,7 +113,36 @@ public class Reserva {
 	} 
 
 
+	public void pedirPlatillo(Platillo platillo) {
+	    if (this.meseroAsignado != null) {
+	        this.meseroAsignado.servirPlatillos(this, platillo);
+	    } 
+	}
+
+	public void pedirBebida(Bebida bebida) {
+	    if (this.meseroAsignado != null) {
+	        this.meseroAsignado.servirBebidas(this, bebida);
+	    } 
+	}
+	
+	public void finalizarReserva() {
+        System.out.println("Finalizando reserva... Liberando recursos.");
+        
+        // 1. Los juegos pasan de estar prestados a disponibles
+        for (Juego j : juegosPrestados) {
+            j.setPrestado(false);
+        }
+        
+        // 2. Limpiamos la lista de juegos prestados de la reserva
+        this.juegosPrestados.clear();
+        
+        // 3. Liberamos la mesa si estaba asignada
+        if (this.mesa != null) {
+            this.mesa.setDisponible(true); // Suponiendo que Mesa tiene este atributo
+        }
+        }
    
+	
 	
 	
 }
