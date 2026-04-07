@@ -868,16 +868,9 @@ public class Consola {
 	
 	public void gestionarJuego() {
 	    Scanner sc = new Scanner(System.in);
-
-	    // 1. Autenticación del Administrador
-	    System.out.println("--- Panel de Control de Inventario ---");
-	    System.out.print("Login: ");
-	    String loginIngresado = sc.nextLine();
-	    System.out.print("Contraseña: ");
-	    String passwordIngresada = sc.nextLine();
-
-	    if (miCafe.getAdmin().getLogin().equals(loginIngresado) && 
-	        miCafe.getAdmin().getPassword().equals(passwordIngresada)) {
+	    if (!validarAdmin()) {
+	        return; // Si no es admin, salimos de la función
+	    }
 	        
 	        System.out.println("\n¿Qué desea hacer?");
 	        System.out.println("1. Crear nuevo juego");
@@ -904,10 +897,8 @@ public class Consola {
 	                System.out.println("Opción no válida.");
 	                break;
 	        }
-	    } else {
-	        System.out.println("Error: Credenciales no válidas.");
-	    }
-	}
+	    } 
+	
 
 	// --- MÉTODOS DE APOYO PARA MANTENER EL CÓDIGO LIMPIO ---
 
@@ -959,65 +950,114 @@ public class Consola {
 	}
 	
 
-	public void registrarNuevoJuego() {
+	public boolean validarAdmin() {
 	    Scanner sc = new Scanner(System.in);
-
-	    // 1. Autenticación del Administrador
-	    System.out.println("--- Acceso Administrativo ---");
+	    
+	    System.out.println("--- Autenticación de Administrador ---");
 	    System.out.print("Login: ");
 	    String loginIngresado = sc.nextLine();
-	    sc.nextLine(); // Limpiar buffer
+	    
 	    System.out.print("Contraseña: ");
 	    String passwordIngresada = sc.nextLine();
 
-	    // Validamos con el objeto admin del Café
-	    if (miCafe.getAdmin().getLogin().equals(loginIngresado) && miCafe.getAdmin().getPassword().equals(passwordIngresada)) {
-	        System.out.println("\nLogin exitoso. Registro de nuevo juego:");
-
-	        System.out.print("ID: "); int id = sc.nextInt();
-	        System.out.print("Precio: "); int precio = sc.nextInt();
-	        sc.nextLine();
-	        System.out.print("Nombre: "); String nombre = sc.nextLine();
-	        System.out.print("Año: "); int anio = sc.nextInt();
-	        sc.nextLine();
-	        System.out.print("Empresa Matriz: "); String empresa = sc.nextLine();
-	        System.out.print("Num. Jugadores: "); int numJug = sc.nextInt();
-	        sc.nextLine();
-	        System.out.print("Restricción Edad: "); String edad = sc.nextLine();
-	        System.out.print("Categoría: "); String cat = sc.nextLine();
-
-	        System.out.print("¿Es un juego difícil? (si/no): ");
-	        String esDificil = sc.nextLine().toLowerCase();
-
-	        Juego nuevoJuego;
-	        if (esDificil.equals("si")) {
-	            System.out.print("Agg Instrucciones ");
-	            String instrucciones = sc.nextLine();
-	            sc.nextLine();
-	            nuevoJuego = new JuegoDificil(id, precio, nombre, anio, empresa, numJug, edad, cat,instrucciones);
-	        } else {
-	            nuevoJuego = new Juego(id, precio, nombre, anio, empresa, numJug, edad, cat);
-	        }
-
-	        System.out.print("¿Tipo de destino? (1. Préstamo / 2. Venta): ");
-	        int tipo = sc.nextInt();
-
-	        if (tipo == 1) {
-	            miCafe.juegosPrestamo.add(nuevoJuego);
-	            System.out.println("Agregado a la lista de PRÉSTAMO.");
-	        } else if (tipo == 2) {
-	            miCafe.juegosVenta.add(nuevoJuego);
-	            System.out.println("Agregado a la lista de VENTA.");
-	        } else {
-	            System.out.println("Opción inválida. El juego no fue guardado.");
-	        }
-
+	    // Comparamos con el administrador guardado en el Café
+	    if (miCafe.getAdmin().getLogin().equals(loginIngresado) && 
+	        miCafe.getAdmin().getPassword().equals(passwordIngresada)) {
+	        return true;
 	    } else {
-	        System.out.println("Error: Credenciales no válidas.");
+	        System.out.println("Error: Credenciales incorrectas.");
+	        return false;
 	    }
 	}
 	
+	public void registrarNuevoJuego() {
 
+	    // Si llegamos aquí, es porque el admin es válido
+	    Scanner sc = new Scanner(System.in);
+	    System.out.println("\n--- Registro de Nuevo Juego ---");
+
+	    System.out.print("ID: "); int id = sc.nextInt();
+	    System.out.print("Precio: "); int precio = sc.nextInt();
+	    sc.nextLine(); // Limpiar buffer
+	    System.out.print("Nombre: "); String nombre = sc.nextLine();
+	    System.out.print("Año: "); int anio = sc.nextInt();
+	    sc.nextLine(); 
+	    System.out.print("Empresa Matriz: "); String empresa = sc.nextLine();
+	    System.out.print("Num. Jugadores: "); int numJug = sc.nextInt();
+	    sc.nextLine();
+	    System.out.print("Restricción Edad: "); String edad = sc.nextLine();
+	    System.out.print("Categoría: "); String cat = sc.nextLine();
+
+	    System.out.print("¿Es un juego difícil? (si/no): ");
+	    String esDificil = sc.nextLine().toLowerCase();
+
+	    Juego nuevoJuego;
+	    if (esDificil.equals("si")) {
+	        System.out.print("Ingrese Instrucciones Especiales: ");
+	        String instrucciones = sc.nextLine();
+	        nuevoJuego = new JuegoDificil(id, precio, nombre, anio, empresa, numJug, edad, cat, instrucciones);
+	    } else {
+	        nuevoJuego = new Juego(id, precio, nombre, anio, empresa, numJug, edad, cat);
+	    }
+
+	    System.out.print("¿Destino? (1. Préstamo / 2. Venta): ");
+	    int tipo = sc.nextInt();
+
+	    if (tipo == 1) {
+	        miCafe.getJuegosPrestamo().add(nuevoJuego);
+	        System.out.println("Juego añadido a PRÉSTAMO.");
+	    } else if (tipo == 2) {
+	        miCafe.getJuegosVenta().add(nuevoJuego);
+	        System.out.println("Juego añadido a VENTA.");
+	    }
+	}
+	
+	public void aceptarPlatillo() {
+	    // 1. Reutilizamos la función de validación que separamos antes
+	    if (!validarAdmin()) {
+	        return; 
+	    }
+
+	    Scanner sc = new Scanner(System.in);
+	    List<Platillo> sugerencias = miCafe.getSugerenciasPendientes();
+
+	    // 2. Verificamos si hay platillos por revisar
+	    if (sugerencias == null || sugerencias.isEmpty()) {
+	        System.out.println("No hay sugerencias de platillos pendientes por revisar.");
+	        return;
+	    }
+
+	    System.out.println("\n--- Revisión de Sugerencias de Platillos ---");
+	    
+	    // 3. Recorremos una copia de la lista para evitar errores al remover elementos
+	    ArrayList<Platillo> copiaSugerencias = new ArrayList<>(sugerencias);
+
+	    for (Platillo p : copiaSugerencias) {
+	        System.out.println("\nPlatillo: " + p.getNombre());
+	        System.out.println("Precio sugerido: $" + p.getPrecio());
+	        System.out.println("Categoría: " + p.getAlergeneos());
+	        
+	        System.out.print("¿Qué desea hacer? (1. Aceptar / 2. Rechazar / 3. Omitir por ahora): ");
+	        int decision = sc.nextInt();
+
+	        if (decision == 1) {
+	            miCafe.getAdmin().incluirSugerencia(p);
+	            System.out.println("El platillo '" + p.getNombre() + "' ha sido agregado al menú.");
+	        } 
+	        else if (decision == 2) {
+	            miCafe.getAdmin().excluirSugerencia(p);
+	            System.out.println("El platillo '" + p.getNombre() + "' ha sido rechazado y eliminado.");
+	        } 
+	        else {
+	            System.out.println("Se ha saltado la revisión de este platillo.");
+	        }
+	    }
+	    
+	    System.out.println("\n--- Fin de la revisión de sugerencias ---");
+	}
+	    
+	
+	
 	public void terminarReserva() {
 	    Scanner sc = new Scanner(System.in);
 	    System.out.println("--- Finalizar Reserva y Generar Factura ---");
@@ -1160,6 +1200,9 @@ public class Consola {
 					consola.terminarReserva();
 					break;
 				case 15:
+					consola.aceptarPlatillo();
+					break;
+				case 16:
 					consola.guardarDatos(); 
 					System.out.println("Saliendo del sistema... ¡Hasta luego!");
 					return;

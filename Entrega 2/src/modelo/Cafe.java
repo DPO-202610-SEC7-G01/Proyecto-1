@@ -115,6 +115,10 @@ public class Cafe {
 		return menuBebidas;
 	}
 	
+	public List<Platillo> getSugerenciasPendientes(){
+		return sugerenciasPendientes;
+	}
+	
 	// Métodos
 	public void cambiarAdmin(Administrador adminNuevo) {
 		admin= adminNuevo;
@@ -123,7 +127,6 @@ public class Cafe {
 	public void agregarSugerencias(Platillo p) {
 		sugerenciasPendientes.add(p);
 	}
-	
 	public void registrarNuevaReserva(Reserva r) {
 	    if (verificarDisponibilidad(r.getFecha(), r.getNumPersonas()) && asignarMesa(r)) {
 	    	reservasPrevias.add(r);

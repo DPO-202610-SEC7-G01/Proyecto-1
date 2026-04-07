@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import modelo.Cafe;
 import modelo.producto.Juego;
+import modelo.producto.Platillo;
 
 public class Administrador extends Usuario {
 	private Cafe miCafe;
@@ -86,6 +87,14 @@ public class Administrador extends Usuario {
 	        return false;
 	    }
 	}
+	
+	public void incluirSugerencia(Platillo platillo) {
+		miCafe.getMenuPlatillos().add(platillo);
+		miCafe.getSugerenciasPendientes().remove(platillo);
+	}
 
+	public void excluirSugerencia(Platillo platillo) {
+		miCafe.getSugerenciasPendientes().remove(platillo);
+	}
 }	
 
