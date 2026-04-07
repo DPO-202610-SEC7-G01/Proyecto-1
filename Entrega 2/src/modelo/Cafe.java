@@ -196,7 +196,9 @@ public class Cafe {
 	public void agregarJuegoVenta(Juego juego) {
 		this.juegosVenta.add(juego);
 	}
-
+	public void sugerirPlatillo(Platillo platillo) {
+		this.sugerenciasPendientes.add(platillo);
+	}
 	public boolean reservarJuego(Juego juego, Reserva r) {
 	    if (!juegosPrestamo.contains(juego)) {
 	        return false;
